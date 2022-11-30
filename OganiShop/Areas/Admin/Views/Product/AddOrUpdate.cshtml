@@ -1,0 +1,167 @@
+﻿@using AppManager.Areas.Admin.Models
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    string error = TempData["error"] as string;
+    List<CategoryModel> listCategory = ViewBag.Category;
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Sản phẩm</a></li>
+        <li class="active">Quản lý sản phẩm</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Quản lý sản phẩm</h3>
+        </div>
+        <!-- /.box-header -->
+        <form class="form-horizontal" action="/admin/product/addorupdate" method="post" style="overflow: hidden">
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <input type="number" name="id" value="@(Model.Id == 0 ? 0 : Model.Id)" hidden>
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Sản phẩm</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="name" value="@(Model.Id == 0 ? "" : Model.Name)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Giá bán</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="price" value="@(Model.Id == 0 ? "" : Model.Price)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Giá gốc</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="oldprice" value="@(Model.Id == 0 ? "" : Model.OldPrice)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Số lượng</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="quantity" value="@(Model.Id == 0 ? "" : Model.Quantity)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Trọng lượng</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="weight" value="@(Model.Id == 0 ? "" : Model.Weight)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Đơn vị đo</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="unit" value="@(Model.Id == 0 ? "" : Model.Unit)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputEmail1" class="col-md-3 control-label">Thuộc danh mục</label>
+                            <div class="col-md-9">
+                                <input type="text" name="categoryid" id="cate" value="@(Model.Id == 0 ? 0 : Model.CategoryId)" hidden>
+                                <select class="form-control select2" id="category" style="width: 100%;">
+                                    @{
+                                        foreach (var item in listCategory)
+                                        {
+                                            if (Model.CategoryId == item.Id)
+                                            {
+                                                <option id="@item.Id" selected>@item.Name</option>
+                                            }
+                                            else
+                                            {
+                                                <option id="@item.Id">@item.Name</option>                            
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Tóm tắt</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" name="summary" value="@(Model.Id == 0 ? "" : Model.Summary)">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Mô tả</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" name="description" value="@(Model.Id == 0 ? "" : Model.Description)" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- /.col -->
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-md-3 control-label" for="exampleInputPassword1">Ảnh đại diện</label>
+                            <div class="col-md-12 text-center">
+                                <img id="image-upload" class="rounded mx-auto d-block" style="padding-bottom:1rem" src="@(Model.Id == 0 ? "/img/default.jpg" : Model.Avatar)" width="193px">
+                            </div>
+                            <input type="text" name="avatar" id="image-file-path" value="@(Model.Id == 0 ? 0 : Model.Avatar)" hidden>
+                            <input type="text" name="avatarFileId" id="image-file-id" value="@(Model.Id == 0 ? 0 : Model.AvatarFileId)" hidden>
+                            <div class="col-md-12 text-center">
+                                <input type="file" id="image-upload" name="fileUpload">
+                            </div>
+                        </div>
+                        
+                    <!-- /.form-group -->
+                        
+                        
+                    <!-- /.form-group -->
+                    </div>
+                        
+                    <!-- /.col -->
+                </div>
+            <!-- /.row -->
+            </div>
+            <div class="box-footer">
+                <button type="submit" class="btn btn-info pull-right ">Lưu thông tin</button>
+            </div>
+        </form>
+        <!-- /.box-body -->
+        </div>
+</section>
+
+
+
+
+@section Scripts{
+    <script>
+        $('#category').on('change', function(){
+            $('#cate').val($("#category :selected").attr("id"));
+            console.log($("#cate").val());
+        });
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/admin/product/uploadfile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    console.log(res);
+                    $('#image-upload').attr('src', res.fileInfo.filePath);
+                    $('#image-file-path').val(res.fileInfo.filePath);
+                    $('#image-file-id').val(res.fileInfo.id);
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        })
+    </script>
+}

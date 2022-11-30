@@ -1,0 +1,81 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    string error = TempData["error"] as string;
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Danh mục</a></li>
+        <li class="active">Quản lý danh mục</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="box box-info">
+        <div class="box-header with-border container" style="width:80%">
+            <h3 class="box-title">&nbsp;&nbsp;&nbsp; Quản lý danh mục</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <div class="container" style="width:80%">
+            <form role="form" action="/Admin/Category/AddOrUpdate" method="post">
+                <div class="box-body">
+                    <div class="form-group">
+                        <input type="number" name="id" value="@(Model.Id == 0 ? 0 : Model.Id)" hidden>
+                        <input type="text" name="filepath" value="@(Model.Id == 0 ? "" : Model.FilePath)" id="file-path" hidden>
+                        <input type="text" name="fileid" value="@(Model.Id == 0 ? "" : Model.FileId)" id="file-id" hidden>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Tên danh mục</label>
+                        <input type="text" class="form-control" name="name" value="@(Model.Id == 0 ? "" : Model.Name)">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputFile">Upload ảnh</label>
+                        <img src="@(Model.Id == 0 ? "/img/default.jpg" : Model.FilePath)" id="image-upload" class="rounded mx-auto d-block" style="width: 100%" />
+                        <input type="file" name="fileUpload" id="exampleInputFile">
+                        <i class="help-block">Upload ảnh đại diện của danh mục</i>
+                    </div>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+                    <button type="submit" class="btn btn-info pull-right">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/Admin/Category/UploadFile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: res => {
+                    if (res.status == 'success'){
+                        $('#image-upload').attr('src', res.fileInfo.filePath);
+                        $('#file-path').val(res.fileInfo.filePath);
+                        $('#file-id').val(res.fileInfo.id);
+                    }
+                    else {
+                        alert("Error!");
+                    }
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        });
+    </script>
+}

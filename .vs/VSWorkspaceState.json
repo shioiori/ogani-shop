@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\AppManager",
+    "\\AppManager\\Areas",
+    "\\AppManager\\Areas\\Admin",
+    "\\AppManager\\Areas\\Admin\\Views",
+    "\\AppManager\\Areas\\Admin\\Views\\Category",
+    "\\AppManager\\Controllers",
+    "\\AppManager\\Models",
+    "\\AppManager\\Views",
+    "\\AppManager\\Views\\Home"
+  ],
+  "SelectedNode": "\\AppManager.sln",
+  "PreviewInSolutionExplorer": false
+}

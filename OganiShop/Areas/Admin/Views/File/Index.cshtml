@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+
+<h2>Quản lý file</h2>
+<div>
+    <p>Chọn file</p>
+    <input type="File" name="fileUpload"/>
+</div>
+<div class="row">
+    <div class="col-md-3">
+        <img src="/img/default.jpg" id="image-upload" class="w-100" style="width: 100%"/>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/admin/file/uploadfile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    if (res.status == 'success'){
+                        $('#image-upload').attr('src', res.fileInfo.filePath);
+                    }
+                    else {
+                        alert("Error!");
+                    }
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        });
+    </script>
+}

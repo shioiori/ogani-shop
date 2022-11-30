@@ -1,0 +1,112 @@
+﻿
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+}
+<div class="row">
+    <div class="col-md-8">
+        <h3>Danh sách danh mục</h3> 
+        <table class="table table-bordered table-striped" id="cateTable">
+            <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tên</th>
+                    <th>Slug</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Rau củ</td>
+                    <td>rau-cu</td>
+                    <td>
+                        <a href="/Admin/Category/AddOrUpdate" class="btn btn-primary" style="color: white">Sửa</a>
+                        <a href="/Admin/Category/Delete" class="btn btn-danger" style="color: white">Xóa</a>
+                    </td>
+                </tr>             
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <h3>Thêm mới danh mục</h3>
+        <div class="box">
+            <div class="box-body">
+                <div class="form-group">
+                    <label>Tên danh mục</label>
+                    <input type="text" name="name" value="" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <label>Slug</label>
+                    <input type="text" name="slug" value="" class="form-control"/>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary btn-addOrUpdate">Thêm mới</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+    <script>
+        let req = {
+            pageSize: 10,
+            pageNumber: 1
+        };
+
+        getData(req);
+
+        function getData(obj){
+            $.ajax({
+                url: "/Admin/CategoryAjax/GetData",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(obj),
+                beforeSend: function(){
+
+                },
+                success: function(res){
+                    console.log(res);
+                    $('#cateTable tbody').html('');
+                    res.data.forEach(function (item, index){
+                        let row = `<tr>
+                                        <td>${index + 1}</td>
+                                        <td>${item.name}</td>
+                                        <td>${item.slug}</td>
+                                        <td>
+                                            <a class="btn btn-primary" style="color: white">Sửa</a>
+                                            <a class="btn btn-danger" style="color: white">Xóa</a>
+                                        </td>
+                                   </tr>`;
+                        $('#cateTable tbody').append(row);
+                    })
+                }
+            })
+        }
+
+        $('.btn-addOrUpdate').click(function(){
+            let obj = {};
+            obj.name = $('input[name="name"]').val();
+            obj.slug = $('input[name="slug"]').val();
+             $.ajax({
+                url: "/Admin/CategoryAjax/AddOrUpdate",
+                type: "POST",
+                dataType: "json",
+                contentType: "application/json",
+                data: JSON.stringify(obj),
+                beforeSend: function(){
+
+                },
+                success: function(res){
+                    if (res > 0){
+                        getData(req);
+                    }
+                }
+            })
+        })
+    </script>
+}

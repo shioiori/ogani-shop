@@ -1,0 +1,129 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    var Avatar = ViewBag.Avatar;
+    // var listProductImage = ViewBag.ListProductImage;
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Sản phẩm</a></li>
+        <li class="active">Quản lý sản phẩm</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="box box-info">
+        <div class="box-header with-border">
+            <h3 class="box-title">Thêm ảnh cho sản phẩm</h3>
+        </div>
+        <!-- /.box-header -->
+        <!-- form start -->
+        <div class="container">
+            <div class="row" style="overflow:hidden">
+                <div class="col-md-6">
+                    <!--Chọn ảnh làm avatar-->
+                    <form class="form-horizontal" action="/Admin/Product/UpdateProductAvatar" method="post">
+                        <div class="box-body">
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="exampleInputPassword1">Avatar hiện tại</label>
+                                <input type="text" name="productid" value="@Model[0].ProductId" hidden>
+                                <input type="text" name="id" id="avatar-id" value="@Avatar.Id" hidden>
+                                <div class="col-md-12 text-center">
+                                    <img src="@Avatar.FilePath" id="image-avatar" class="rounded mx-auto d-block" style="width: 256px"/>
+                                </div>
+                            </div>
+                            <div class="form-group" style="padding-top: 1rem; padding-bottom: 1rem">
+                                <i>Chọn một trong những ảnh dưới đây đặt làm ảnh đại diện cho sản phẩm</i>
+                            </div>
+                            <div class="form-group text-center">
+                                @{
+                                    foreach(var item in Model)
+                                    {
+                                        <div class="col-sm-3"> 
+                                            <img src="@item.FilePath" id="@item.Id" class="list-image rounded mx-auto d-block" style="width: 128px"/>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            <button type="submit" class="btn btn-info pull-right" id="update-avatar">Xác nhận</button>
+                        </div>                           
+                    </form>
+                </div>           
+                <div class="col-md-6">
+                    <!--Thêm ảnh-->
+                    <div class="form-group">
+                        <form class="form-horizontal" action="/Admin/Product/UpdateProductImage" method="post">
+                            <div class="box-body">
+                                <div class="form-group">                    
+                                    <input type="text" name="productid" value="@Model[0].ProductId" hidden>
+                                    <input type="text" id="image-file-path" name="filePath" hidden>
+                                    <input type="text" id="image-file-id" name="fileId" hidden>
+                                    <label class="col-md-3 control-label" for="exampleInputPassword1">Upload ảnh</label>
+                                    <div class="col-md-12 text-center">
+                                        <img src="/img/default.jpg" id="image-upload" class="rounded mx-auto d-block" style="width: 256px" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <input type="file" name="fileUpload" id="exampleInputFile">
+                                    <i class="help-block">Upload ảnh của sản phẩm</i>  
+                                </div>
+                            <div class="box-footer">
+                                <button type="submit" class="btn btn-info pull-right">Thêm ảnh</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>          
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        $('.list-image').click(function(){
+            console.log("click!"); 
+            $('#image-avatar').attr("src", $(this).attr("src"));
+            $('#avatar-id').val($(this).attr("id"));
+        });
+
+         $('#update-avatar').click(function(){
+            alert("Thay đổi ảnh đại diện của sản phẩm thành công!");
+        });
+
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/admin/product/uploadfile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    if (res.status == 'success'){
+                        $('#image-upload').attr('src', res.fileInfo.filePath);
+                        $('#image-file-path').val(res.fileInfo.filePath);
+                        $('#image-file-id').val(res.fileInfo.id);
+                    }
+                    else {
+                        alert("Error!");
+                    }
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        });
+    </script>
+}

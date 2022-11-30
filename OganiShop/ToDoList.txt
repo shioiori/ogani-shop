@@ -1,0 +1,5 @@
+// tạo db -> tạo entity -> thêm connect sql trong configure -> sửa ConfigureServices StartUp -> thêm dbContext vào Controller
+
+// post là put dữ liệu kiểu object còn get là kiểu id hoặc name hiện trên url?
+
+// addAuthentication vào configureService -> thêm UseAuthenication và useAuthorization vào Configure
