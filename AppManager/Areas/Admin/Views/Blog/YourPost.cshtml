@@ -1,0 +1,85 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    string error = TempData["error"] as string;
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Blog</a></li>
+        <li class="active">Bài viết của bạn</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+           <div class="box box-solid">
+                <div class="box-header with-border">
+                    <h3 class="box-title">Thư mục</h3>
+                    <div class="box-tools">
+                    <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                    </button>
+                    </div>
+                </div>
+                <div class="box-body no-padding">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li><a href="/Admin/Blog/YourPost"><i class="fa fa-inbox"></i> Tất cả bài viết</a></li>
+                        <li><a href="/Admin/Blog/YourPost?status=0"><i class="fa fa-envelope-o"></i> Bài viết công khai</a></li>
+                        <li><a href="/Admin/Blog/YourPost?status=1"><i class="fa fa-file-text-o"></i> Bài viết bản nháp</a></li>
+                        <li><a href="/Admin/Blog/YourPost?status=2"><i class="fa fa-filter"></i> Bài viết đã xoá </a></li>
+                      </ul>
+                </div>
+            <!-- /.box-body -->
+       
+            </div>
+        </div>
+       <div class="col-md-9">
+          <div class="box box-primary">
+            <div class="box-header with-border">
+                <h3 class="box-title">Bài viết của bạn</h3>
+                <div class="box-tools pull-right">
+                <div class="has-feedback">
+                    <input type="text" class="form-control input-sm" placeholder="Tìm kiếm bài viết...">
+                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                </div>
+                </div>
+                <!-- /.box-tools -->
+            </div>  
+            <div class="tab-content" style="margin: 1.5rem">
+                    @{
+                        foreach (var item in @Model)
+                        {
+                            <div class="post">
+                                <div class="user-block">
+                                <img class="img-circle img-bordered-sm" src="@item.Avatar" alt="user image">
+                                    <span class="username">
+                                        <a href="/Admin/Blog/Post?id=@item.Id">@item.Title</a>
+                                        <a href="#" class="pull-right btn-box-tool"></a>
+                                    </span>
+                                <span class="description">Written by @item.AuthorName - Shared public - @item.CreatedDate.ToString("MMM d, yyyy")</span>
+                                </div>
+                                <!-- /.user-block -->
+                                <p>
+                                    @item.Description
+                                </p>                           
+                            </div>
+                        }
+                    }
+            </div>
+            <div class="box-footer">
+                </div>
+          </div>
+          <!-- /. box -->
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+    </script>
+}

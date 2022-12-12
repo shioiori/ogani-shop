@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    string error = TempData["error"] as string;
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Blog</a></li>
+        <li class="active">Xem bài viết</li>
+    </ol>
+</section>
+
+<section class="content">
+    <div class="row">
+    <div class="col-md-3">
+        <div class="box box-primary">
+            <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive img-circle" src="@Model.Avatar" alt="User profile picture">
+
+                <h3 class="profile-username text-center">@Model.AuthorName</h3>
+
+                <p class="text-muted text-center">@Model.AuthorRole</p>
+
+                <ul class="list-group list-group-unbordered">
+                <li class="list-group-item">
+                    <b>Followers</b> <a class="pull-right">1,322</a>
+                </li>
+                <li class="list-group-item">
+                    <b>Following</b> <a class="pull-right">543</a>
+                </li>
+                <li class="list-group-item">
+                    <b>Friends</b> <a class="pull-right">13,287</a>
+                </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- /.col -->
+    <div class="col-md-9">
+          <div class="box box-primary">
+            <!-- /.box-header -->
+            <div class="box-body no-padding">
+              <div class="mailbox-read-info">
+                <h3>@Model.Title</h3>
+                <h5>Written by: @Model.AuthorName
+                  <span class="mailbox-read-time pull-right">@Model.CreatedDate.ToString("MMM d, yyyy")</span></h5>
+              </div>
+               <!-- /.mailbox-controls -->
+              <div class="mailbox-read-message">
+                    @Html.Raw(Model.Content)
+              </div>
+              <!-- /.mailbox-read-message -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                 <ul class="list-inline">
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-share margin-r-5"></i> Share</a></li>
+                    <li><a href="#" class="link-black text-sm"><i class="fa fa-thumbs-o-up margin-r-5"></i> Like</a>
+                    </li>
+                    <li class="pull-right">
+                      <a href="#" class="link-black text-sm"><i class="fa fa-comments-o margin-r-5"></i> Comments
+                        (5)</a></li>
+                  </ul>
+            </div>
+            <!-- /.box-footer -->
+            <div class="box-footer">
+                <form class="form-horizontal">
+                    <div class="form-group margin-bottom-none">
+                        <div class="col-sm-9">
+                        <input class="form-control input-sm" placeholder="Response">
+                        </div>
+                        <div class="col-sm-3">
+                        <button type="submit" class="btn btn-primary pull-right btn-block btn-sm">Send</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <!-- /.box-footer -->
+          </div>
+          <!-- /. box -->
+        </div>
+    <!-- /.col -->
+    </div>
+    <!-- /.row -->
+</section>

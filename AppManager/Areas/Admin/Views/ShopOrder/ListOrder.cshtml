@@ -1,0 +1,109 @@
+﻿
+@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Dashboard";
+    int pageCount = (int)ViewBag.pageCount;
+    int pageNumber = (int)ViewBag.pageNumber;
+    int pageSize = (int)ViewBag.pageSize;
+    int stt = pageSize * pageNumber - (pageSize - 1);
+}
+
+<section class="content-header">
+    <h1>
+        &nbsp;
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li><a href="#">Đơn hàng</a></li>
+        <li class="active">Danh sách đơn hàng</li>
+    </ol>
+</section>
+
+
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+            <div class="box-header">
+                <h3 class="box-title">Danh sách đơn hàng</h3>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <table id="example2" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Tình trạng</th>
+                    <th>Tổng tiền</th>
+                    <th>Người mua</th>
+                    <th>Ngày mua</th>
+                    <th>Thao tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var item in Model){
+                            <tr role="row" class="odd">
+                                <td class="sorting_1">@stt</td>
+                                <td>
+                                    @{
+                                        switch (item.OrderStatus)
+                                        {
+                                            case 0:
+                                                <span class="label label-warning">Pending</span>
+                                                break;
+                                            case 1:
+                                                <span class="label label-warning">Processing</span>
+                                                break;
+                                            case 2:
+                                                <span class="label label-success">Shipped</span>
+                                                break;
+                                            case 3:
+                                                <span class="label label-danger">Delivered</span>
+                                                break;
+                                            default:
+                                                <span class="label label-warning">Pending</span>
+                                                break;
+                                        }
+                                    }
+                                </td>
+                                <td>@item.TotalPrice.ToString("0.00")$</td>
+                                <td>
+                                    @{
+                                        if (item.Account == null){
+                                            <span style="color:	#bfc4c4">Ẩn danh</span>
+                                        }
+                                        else {
+                                            <span>@item.Account</span>
+                                        }
+                                    }
+                                </td>
+                                <td>@item.CreatedDate</td>
+                                <td>
+                                    <a href="/Admin/ShopOrder/OrderDetail?id=@item.ShopOrderId" class="btn btn-default btn-info" style="color: white">Chi tiết</a>
+                                    <a href="/Admin/ShopOrder/Delete?id=@item.ShopOrderId" class="btn btn-default btn-danger" style="color: white">Xóa</a>
+                                </td>
+                            </tr>
+                            stt++;
+                        }
+                    }
+                </tbody>
+                </table>
+            </div>
+            <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
+        </div>
+    <!-- /.row -->
+</section>
+
+@section Scripts{
+    <script>
+        function clickPage(pageNumber){
+            document.getElementById("txtPageNumber").value = pageNumber;
+            document.getElementById("formSearch").submit();
+        }
+    </script>
+}
