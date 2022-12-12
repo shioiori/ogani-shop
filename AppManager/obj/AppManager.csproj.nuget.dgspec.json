@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj": {}
+    "F:\\AppManager\\AppManager\\AppManager.csproj": {}
   },
   "projects": {
-    "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj": {
+    "F:\\AppManager\\AppManager\\AppManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj",
+        "projectUniqueName": "F:\\AppManager\\AppManager\\AppManager.csproj",
         "projectName": "AppManager",
-        "projectPath": "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj",
+        "projectPath": "F:\\AppManager\\AppManager\\AppManager.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "F:\\Backend Devmaster\\AppManager\\AppManager\\obj\\",
+        "outputPath": "F:\\AppManager\\AppManager\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
