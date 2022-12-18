@@ -44,6 +44,7 @@ namespace AppManager.Controllers
                         select new ProductModel()
                         {
                             Id = a.Id,
+                            CartId = e.Id,
                             Name = a.Name,
                             Slug = a.Slug,
                             Price = a.Price,
@@ -136,6 +137,7 @@ namespace AppManager.Controllers
                         select new ProductModel()
                         {
                             Id = a.Id,
+                            CartId = e.Id,
                             Name = a.Name,
                             Slug = a.Slug,
                             Price = a.Price,
@@ -144,6 +146,17 @@ namespace AppManager.Controllers
                             AvatarFileId = d.Id
                         });
             return cart.Any() ? Json(cart) : Json("");
+        }
+        
+        [HttpGet]
+        public IActionResult RemoveProduct(int id)
+        {
+            var cart = _dbContext.ShoppingCartEntities.Find(id);
+            cart.IsDeleted = true;
+            cart.Status = 1;
+            _dbContext.ShoppingCartEntities.Update(cart);
+            _dbContext.SaveChanges();
+            return Redirect("/ShoppingCart/Index");
         }
 
     }

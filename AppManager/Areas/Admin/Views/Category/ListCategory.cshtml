@@ -23,61 +23,61 @@
 <section class="content">
     <div class="row">
         <div class="col-xs-12">
-        <div class="box box-info">
-            <div class="box-header with-border container" style="width:80%">
-                <h3 class="box-title">Hồ sơ tuyển dụng</h3>
-                <div class="box-tools">
-                  <div class="input-group input-group-sm" style="width: 150px;">
-                     <input action="/Admin/Category/ListCategory" method="get" id="formSearch" type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-                    <div class="input-group-btn">
-                      <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+            <div class="box box-info">
+                <div class="box-header with-border container" style="width:80%">
+                    <h3 class="box-title">Danh mục sản phẩm</h3>
+                    <div class="box-tools">
+                      <div class="input-group input-group-sm" style="width: 150px;">
+                         <input action="/Admin/Category/ListCategory" method="get" id="formSearch" type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                        <div class="input-group-btn">
+                          <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-            <!-- /.box-header -->
-            <div class="container" style="width:80%">
-                <div class="box-body table-responsive no-padding">
-                    <input type="number" name="pageNumber" id="txtPageNumber" value="1" hidden>
-                    <table class="table table-hover">
-                        <tr>
-                        <th>STT</th>
-                        <th>Danh mục</th>
-                        <th>Ảnh</th>
-                        <th>Thao tác</th>
-                        </tr>
-                        @{
-                            foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@stt</td>
-                                    <td>@item.Name</td>>
-                                    <td>
-                                        <img src="@item.FilePath" style="width:128px">
-                                    </td>
-                                    <td>
-                                        <a href="/Admin/Category/AddOrUpdate?id=@item.Id" class="btn btn-default btn-primary" style="color: white">Sửa</a>
-                                        <a href="/Admin/Category/Delete?id=@item.Id" class="btn btn-default btn-danger" style="color: white">Xóa</a>
-                                    </td>
-                                </tr>
-                                stt++;
+                <!-- /.box-header -->
+                <div class="container" style="width:80%">
+                    <div class="box-body table-responsive no-padding">
+                        <input type="number" name="pageNumber" id="txtPageNumber" value="1" hidden>
+                        <table class="table table-hover">
+                            <tr>
+                            <th>STT</th>
+                            <th>Danh mục</th>
+                            <th>Ảnh</th>
+                            <th>Thao tác</th>
+                            </tr>
+                            @{
+                                foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@stt</td>
+                                        <td>@item.Name</td>>
+                                        <td>
+                                            <img src="@item.FilePath" style="width:128px">
+                                        </td>
+                                        <td>
+                                            <a href="/Admin/Category/AddOrUpdate?id=@item.Id" class="btn btn-default btn-primary" style="color: white">Sửa</a>
+                                            <a href="/Admin/Category/Delete?id=@item.Id" class="btn btn-default btn-danger" style="color: white">Xóa</a>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
                             }
-                        }
-                    </table>
-                </div>
-                <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <ul class="pagination pagination-sm no-margin pull-right">
-                        <li><a href="#" onclick="clickPage(@Math.Max(pageNumber-1,1)">&laquo;</a></li>
-                        @for (int i = 1; i <= pageCount; ++i)
-                        {
-                            <li><a href="#" onclick="clickPage(@i)">@i</a></li>
-                        }
-                        <li><a href="#" onclick="clickPage(@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
-                    </ul>
+                        </table>
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li><a href="#" onclick="clickPage(@Math.Max(pageNumber-1,1)">&laquo;</a></li>
+                            @for (int i = 1; i <= pageCount; ++i)
+                            {
+                                <li><a href="#" onclick="clickPage(@i)">@i</a></li>
+                            }
+                            <li><a href="#" onclick="clickPage(@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-        </div>
         <!-- /.box -->
         </div>
     </div>

@@ -171,7 +171,6 @@
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\copyformatting\cursors\cursor.svg" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\dialog\dialogDefinition.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\div\dialogs\div.js" />
-    <None Include="wwwroot\admin\plugins\ckeditor\plugins\easyimage\dialogs\easyimagealt.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\exportpdf\CHANGELOG.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\exportpdf\LICENSE.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\exportpdf\plugindefinition.js" />
@@ -198,6 +197,7 @@
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\exportpdf\tests\stylesheets.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\exportpdf\tests\_helpers\tools.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\find\dialogs\find.js" />
+    <None Include="wwwroot\admin\plugins\ckeditor\plugins\flash\dialogs\flash.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\forms\dialogs\button.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\forms\dialogs\checkbox.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\forms\dialogs\form.js" />
@@ -291,6 +291,10 @@
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\wsc\LICENSE.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\plugins\wsc\README.md" />
+    <None Include="wwwroot\admin\plugins\ckeditor\plugins\youtube\lang\en.js" />
+    <None Include="wwwroot\admin\plugins\ckeditor\plugins\youtube\lang\ja.js" />
+    <None Include="wwwroot\admin\plugins\ckeditor\plugins\youtube\lang\pt.js" />
+    <None Include="wwwroot\admin\plugins\ckeditor\plugins\youtube\plugin.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\README.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\samples\img\logo.svg" />
     <None Include="wwwroot\admin\plugins\ckeditor\samples\js\sample.js" />
@@ -314,7 +318,6 @@
     <None Include="wwwroot\admin\plugins\ckeditor\samples\toolbarconfigurator\lib\codemirror\show-hint.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\SECURITY.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\skins\moono-lisa\readme.md" />
-    <None Include="wwwroot\admin\plugins\ckeditor\skins\moono\readme.md" />
     <None Include="wwwroot\admin\plugins\ckeditor\styles.js" />
     <None Include="wwwroot\admin\plugins\ckeditor\vendor\promise.js" />
     <None Include="wwwroot\admin\plugins\ckfinder\src\CKFinder.Connector.Plugin.DiskQuota\CKFinder.Connector.Plugin.DiskQuota.csproj" />

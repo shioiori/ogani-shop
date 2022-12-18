@@ -48,13 +48,13 @@ namespace AppManager.Controllers
         public IActionResult GetHeaderBanner()
         {
             var banner = (from b in _dbContext.BannerEntities
-                         join f in _dbContext.FileManageEntities on b.FileId equals f.Id
-                         where b.Type == 0
-                         select new BannerModel()
-                         {
-                             Id = b.Id,
-                             ImagePath = f.FilePath,
-                         }).FirstOrDefault();
+                          join f in _dbContext.FileManageEntities on b.FileId equals f.Id
+                          where b.Type == 0
+                          select new BannerModel()
+                          {
+                              Id = b.Id,
+                              ImagePath = f.FilePath,
+                          }).FirstOrDefault();
             return banner != null ? Json(banner) : Json("");
         }
 
@@ -62,15 +62,15 @@ namespace AppManager.Controllers
         public IActionResult GetAllCategoryImage()
         {
             var categoryImg = (from b in _dbContext.CategoryEntities
-                          join f in _dbContext.FileManageEntities on b.FileId equals f.Id
-                          select new CategoryRenderModel()
-                          {
-                              Id = b.Id,
-                              Name = b.Name,
-                              Slug = b.Slug,
-                              FileId = f.Id,
-                              FilePath = f.FilePath,
-                          }).ToList();
+                               join f in _dbContext.FileManageEntities on b.FileId equals f.Id
+                               select new CategoryRenderModel()
+                               {
+                                   Id = b.Id,
+                                   Name = b.Name,
+                                   Slug = b.Slug,
+                                   FileId = f.Id,
+                                   FilePath = f.FilePath,
+                               }).ToList();
             return categoryImg != null ? Json(categoryImg) : Json("");
         }
 
@@ -99,8 +99,49 @@ namespace AppManager.Controllers
                                       Quantity = item.Sum(x => x.Quantity)
                                   })
                                   .ToList().Take(5);
-            return Json(categories);
+            List<CategoryProductModel>listCategories = new List<CategoryProductModel>();
+            foreach (var category in categories)
+            {
+                var q = (from a in _dbContext.ProductEntities
+                               join b in _dbContext.CategoryEntities on a.CategoryId equals b.Id
+                               join c in _dbContext.OrderDetailEntities on a.Id equals c.ProductId
+                               join d in _dbContext.ProductImageEntities on a.Id equals d.ProductId
+                               join e in _dbContext.FileManageEntities on d.FileId equals e.Id
+                               where a.IsDeleted == false
+                               where b.IsDeleted == false && b.Id == category.Id
+                               where c.IsDeleted == false
+                               where d.IsAvatar == true
+                               select new ProductModel()
+                               {
+                                   Id = a.Id,
+                                   Name = a.Name,
+                                   Price = a.Price,
+                                   Avatar = e.FilePath,
+                                   AvatarFileId = e.Id,
+                                   Quantity = c.Quantity,
+                               }).ToList();
+                var listPrd = (from a in q
+                              group a by new { a.Id, a.Name, a.Avatar, a.AvatarFileId, a.Price} into item
+                              select new ProductModel()
+                              {
+                                    Id = item.Key.Id,
+                                    Name = item.Key.Name,
+                                    Price= item.Key.Price,
+                                    Avatar = item.Key.Avatar,
+                                    AvatarFileId = item.Key.AvatarFileId,
+                                    Quantity = item.Sum(a => a.Quantity),
+                              }).OrderBy(x => x.Quantity).ToList();
+                listCategories.Add(new CategoryProductModel()
+                {
+                    CategoryId = category.Id,
+                    CategorySlug = category.Slug,
+                    CategoryName = category.Name,
+                    ListProduct = listPrd
+                });
+            }
+            return Json(listCategories);
         }
+
         [HttpGet]
         public IActionResult GetSmallBanner()
         {

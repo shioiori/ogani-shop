@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using AppManager.Entities;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace AppManager.Areas.Admin.Controllers
 {
@@ -27,11 +28,13 @@ namespace AppManager.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult AuthorInfo()
         {
-            var account = HttpContext.Request.Cookies["account"];
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var account = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
             var query = (from a in _dbContext.AccountManagerEntities
                          join b in _dbContext.AccountImageEntities on a.Account equals b.Account
                          join c in _dbContext.FileManageEntities on b.FileId equals c.Id
                          join d in _dbContext.UserEntities on a.Account equals d.Account
+                         where a.Account == account
                          select new PostDetailModel()
                          {
                              AuthorName = d.FirstName + " " + d.LastName,
@@ -60,8 +63,10 @@ namespace AppManager.Areas.Admin.Controllers
                              Description = a.Description,
                              Content = a.Content,
                              AuthorRole = e.Role,
+                             CategoryId = b.Id,
                              Category = b.Name,
-                             Avatar = g.FilePath
+                             Avatar = g.FilePath,
+                             AvatarId = g.Id,
                          }).First();
             var tags = (from x in _dbContext.PostTagEntities
                         join y in _dbContext.TagEntities on x.TagId equals y.Id
@@ -72,8 +77,164 @@ namespace AppManager.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        public IActionResult AddOrUpdate(PostDetailModel model)
+        {
+            // lấy tên tk
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var account = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            
+            // thêm bài viết
+     
+            var entity = _dbContext.PostEntities.Find(model.Id);
+            if (entity == null)
+            {
+                entity = new PostEntity()
+                {
+                    Title = model.Title,
+                    Description = model.Description,
+                    Content = model.Content,
+                    CategoryId = model.CategoryId,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    CreatedBy = account,
+                    UpdatedBy = account,
+                    Status = model.Status,
+                };
+                _dbContext.PostEntities.Add(entity);
+                
+            }
+            else
+            {
+                entity.Title = model.Title;
+                entity.Description = model.Description;
+                entity.Content = model.Content;
+                entity.CategoryId = model.CategoryId;
+                entity.UpdatedDate = DateTime.Now;
+                entity.UpdatedBy = account;
+                entity.Status = model.Status;
+                _dbContext.PostEntities.Update(entity);
+            }
+            _dbContext.SaveChanges();
+            model.Id = entity.Id;
+            // thêm ảnh đại diện ?? select x=>x k dc nhưng select new thì dc
+            var img = _dbContext.PostImageEntities.Where(x => x.PostId == model.Id && x.IsAvatar == true)
+                                                  .Select(x => new PostImageEntity()
+                                                  {
+                                                      Id = x.Id,
+                                                      PostId = x.PostId,
+                                                      FileId = x.FileId,
+                                                      IsAvatar = x.IsAvatar,
+                                                      CreatedDate = x.CreatedDate,
+                                                      UpdatedDate = x.UpdatedDate,
+                                                      CreatedBy = x.CreatedBy,
+                                                      UpdatedBy = x.UpdatedBy,
+                                                  }).ToList();
+            // xoá avatar cũ
+            if (img.Any())
+            {
+                var avatar = img.First();
+                avatar.IsAvatar = false;
+                avatar.UpdatedDate = DateTime.Now;
+                avatar.UpdatedBy = account;
+                _dbContext.PostImageEntities.Update(avatar);
+            }
+            // thêm avatar mới
+            _dbContext.PostImageEntities.Add(new PostImageEntity()
+            {
+                PostId = model.Id,
+                FileId = model.AvatarId,
+                IsAvatar = true,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                CreatedBy = account,
+                UpdatedBy = account,
+            });
+            _dbContext.SaveChanges();
+
+
+            // thêm tag mới vào entity tag
+            var tags = model.Tag[0].ToString().Split(", ").ToList();
+            var temp = new List<string>(tags);
+            foreach (var tag in tags)
+            {
+                if (!_dbContext.TagEntities.Where(x => x.Name == tag).Any())
+                {
+                    var e = new TagEntity()
+                    {
+                        Name = tag,
+                        Slug = tag.Replace(" ", "-").ToLower(),
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        CreatedBy = account,
+                        UpdatedBy = account,
+                    };
+                    _dbContext.TagEntities.Add(e);
+                    _dbContext.SaveChanges();
+                    _dbContext.PostTagEntities.Add(new PostTagEntity()
+                    {
+                        PostId = model.Id,
+                        TagId = e.Id,
+                        CreatedDate = DateTime.Now,
+                        UpdatedDate = DateTime.Now,
+                        CreatedBy = account,
+                        UpdatedBy = account,
+                    });
+                    _dbContext.SaveChanges();
+                    temp.Remove(tag);
+                }
+            }
+            tags = temp;
+            // xoá tag k có trong bài
+            var q = (from a in _dbContext.PostTagEntities
+                    join b in _dbContext.TagEntities on a.TagId equals b.Id
+                    select new TagModel()
+                    {
+                        Id = b.Id,
+                        Slug = b.Slug,
+                        Name = b.Name,
+                    });
+            foreach(var item in q)
+            {
+                if (!tags.Contains(item.Name))
+                {
+                    var x = _dbContext.PostTagEntities.Where(x => x.TagId == item.Id && x.PostId == model.Id).Select(x => x).First();
+                    x.IsDeleted = true;
+                    x.UpdatedBy = account;
+                    x.UpdatedDate = DateTime.Now;
+                    _dbContext.PostTagEntities.Update(x);
+                    _dbContext.SaveChanges();
+                }
+                else
+                {
+                    tags.Remove(item.Name);
+                }
+            }
+
+            // thêm tag còn lại vào trong bài
+
+            foreach (var tag in tags)
+            {
+                var id = _dbContext.TagEntities.Where(x => x.Name == tag).Select(x => x.Id).First();
+                var e = new PostTagEntity()
+                {
+                    PostId = model.Id,
+                    TagId = id,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    CreatedBy = account,
+                    UpdatedBy = account,
+                };
+                _dbContext.PostTagEntities.Add(e);
+            }
+            _dbContext.SaveChanges();
+            return Redirect("/Blog/Post?id=" + entity.Id);
+        }
+
+        [HttpPost]
         public IActionResult UploadFile(IFormFile file)
         {
+            //up avatar bài post
+
             if (file == null)
             {
                 return Json(new { status = "error" });
@@ -136,6 +297,7 @@ namespace AppManager.Areas.Admin.Controllers
                              Description = a.Description,
                              Content = a.Content,
                              AuthorRole = e.Role,
+                             CategoryId = b.Id,
                              Category = b.Name,
                              Avatar = g.FilePath,
                          });
@@ -163,6 +325,7 @@ namespace AppManager.Areas.Admin.Controllers
                              Description = a.Description,
                              Content = a.Content,
                              AuthorRole = e.Role,
+                             CategoryId = b.Id,
                              Category = b.Name,
                              Avatar = g.FilePath,
                          });
@@ -188,6 +351,7 @@ namespace AppManager.Areas.Admin.Controllers
                              Description = a.Description,
                              Content = a.Content,
                              AuthorRole = e.Role,
+                             CategoryId = b.Id,
                              Category = b.Name,
                              Avatar = g.FilePath
                          }).First();

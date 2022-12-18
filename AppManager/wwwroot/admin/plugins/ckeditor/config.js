@@ -1,9 +1,9 @@
 /**
- * @license Copyright (c) 2003-2022, CKSource Holding sp. z o.o. All rights reserved.
- * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
+ * @license Copyright (c) 2003-2017, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-CKEDITOR.editorConfig = function( config ) {
+CKEDITOR.editorConfig = function (config) {
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
@@ -13,8 +13,9 @@ CKEDITOR.editorConfig = function( config ) {
 	config.filebrowserBrowseUrl = '/admin/plugins/ckfinder/ckfinder.html';
 	config.filebrowserImageBrowseUrl = '/admin/plugins/ckfinder/ckfinder.html?type=Images';
 	config.filebrowserFlashBrowseUrl = '/admin/plugins/ckfinder/ckfinder.html?type=Flash';
-	config.filebrowserUploadUrl = '/admin/plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files';
-	config.filebrowserImageUploadUrl = '/Data';
-	config.filebrowserFlashUploadUrl = '/admin/plugins/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash';
+	config.filebrowserUploadUrl = '/admin/plugins/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Files';
+	config.filebrowserImageUploadUrl = '/admin/plugins/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Images';
+	config.filebrowserFlashUploadUrl = '/admin/plugins/ckfinder/core/connector/aspx/connector.aspx?command=QuickUpload&type=Flash';
+
 	CKFinder.setupCKEditor(null, '/admin/plugins/ckfinder');
 };

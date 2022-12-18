@@ -8172,11 +8172,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\AppManager\\AppManager\\AppManager.csproj",
+      "projectUniqueName": "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj",
       "projectName": "AppManager",
-      "projectPath": "F:\\AppManager\\AppManager\\AppManager.csproj",
+      "projectPath": "F:\\Backend Devmaster\\AppManager\\AppManager\\AppManager.csproj",
       "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "F:\\AppManager\\AppManager\\obj\\",
+      "outputPath": "F:\\Backend Devmaster\\AppManager\\AppManager\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

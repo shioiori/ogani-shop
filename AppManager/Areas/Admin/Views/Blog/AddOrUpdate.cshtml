@@ -27,14 +27,16 @@
     <!-- /.col -->
     <div class="col-md-9">
         <div class="box box-primary">
-            <form >
+            <form method="post" action="/Admin/Blog/AddOrUpdate">
                 <div class="box-header with-border">
                     <h3 class="box-title">Quản lý bài viết</h3>
                 </div>
                 <div class="box-body">
                         <input type="text" name="id" value="@(Model == null ? 0 : @Model.Id)" hidden />
-                        <input type="text" name="postAvatarId" id="image-file-id" value="@(Model == null ? 0 : @Model.PostAvatarId)" hidden />
-                        <input type="text" name="postAvatarFilePath" id="image-file-path" value="@(Model == null ? "" : @Model.PostAvatarFilePath)" hidden />
+                        <input type="text" name="avatarId" id="image-file-id" value="@(Model == null ? 0 : @Model.AvatarId)" hidden />
+                        <input type="text" name="avatar" id="image-file-path" value="@(Model == null ? "" : @Model.Avatar)" hidden />
+                        <input type="text" name="status" id="post-status" value="@(Model == null ? 0 : @Model.Status)" hidden />
+                        <input type="text" name="categoryId" id="category-id" value="@(Model == null ? 0 : @Model.CategoryId)" hidden />
                         <div class="form-group">
                             <input class="form-control" placeholder="Tiêu đề:" value="@(Model == null ? "" : Model.Title)" name="title">
                         </div>
@@ -42,8 +44,26 @@
                             <input class="form-control" placeholder="Description:" value="@(Model == null ? "" : Model.Description)" name="description">
                         </div>
                         <div class="form-group">
-                            <textarea id="txt-content" class="form-control" style="height: 300px" name="content">
+                            <textarea id="txt-content" value="@(Model == null ? "" : Html.Raw(Model.Content))" class="form-control" style="height: 300px" name="content">
                             </textarea>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control select2" id="category-blog" style="width: 100%;">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            @{
+                                var tags = "";
+                                if (Model != null)
+                                {
+                                    foreach(var tag in Model.Tag)
+                                    {
+                                        tags += tag + ", ";
+                                    }
+                                }
+                                tags = tags.Substring(0, Math.Max(0, tags.Length - 2));
+                            }
+                            <input class="form-control" placeholder="Tags:" value="@tags" name="tag">
                         </div>
                         <div class="form-group">
                               <label for="exampleInputFile">Ảnh đại diện</label>
@@ -59,6 +79,7 @@
                     </div>
                     <button type="reset" class="btn btn-default btnsubmit" name="delete"><i class="fa fa-times"></i> Huỷ</button>
                 </div>
+
             </form>
         <!-- /.box-footer -->
         </div>
@@ -71,11 +92,13 @@
 
 @section Scripts{
     <script>
-        $(document).ready(function (){
-            CKEDITOR.replace('txt-content', {
-                customConfig: '/admin/plugins/ckeditor/config.js',
-            });
-        });
+        ClassicEditor
+            .create( document.querySelector( '#txt-content' ) )
+            .catch( error => {
+                console.error( error );
+            } );
+    
+      
 
         $(document).ready(function (){
             $(document).on('click', '.btnsubmit', function() {
@@ -109,20 +132,55 @@
             })
         });
 
-         $.ajax({
+        $.ajax({
             url: "/Admin/Blog/AuthorInfo",
             type: "GET",
             dataType: "json",
             beforeSend: function(){},
             success: function(data){
-                $('#author-info').html('');
+                console.log(data);
                 let html = `<img class="profile-user-img img-responsive img-circle" src="${data.avatar}" alt="User profile picture">
                             <h3 class="profile-username text-center">${data.authorName}</h3>
                             <p class="text-muted text-center">${data.authorRole}</p>`
                 $('#author-info').append(html);                
             },
-            error: function(){},
+            error: function(){
+                console.log("error!");
+            },
             complete: function(){}
         });
+
+
+        $.ajax({
+            url: "/Blog/GetCategoryBlog",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function(){},
+            success: function(data){
+                console.log(data);
+                data.forEach(function(item,index){
+                    let html = `<option id="${item.id}">${item.name}</option>`;
+                    
+                    $('#category-blog').append(html);  
+                });          
+            },
+            error: function(){
+                console.log("error!");
+            },
+            complete: function(){}
+        });
+
+        $('#category-blog').on('change', function(){
+            $('#category-id').val($("#category-blog :selected").attr("id"));
+            console.log($("#category-id").val());
+        });
+        
+        //$(document).ready(function (){
+        //    CKFinder.setupCKEditor();
+        //    var editor = CKEDITOR.replace('txt-content', {
+        //        customConfig: '/admin/plugins/ckeditor/config.js',          
+        //    });
+        //});
+
     </script>
 }

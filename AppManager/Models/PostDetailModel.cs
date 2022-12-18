@@ -11,9 +11,12 @@ namespace AppManager.Models
         public string AuthorRole { get; set; }
         public string Description { get; set; }
         public string Content { get; set; }
+        public int CategoryId { get; set; }
         public string Category { get; set; }
+        public int AvatarId { get; set; }
         public string Avatar { get; set; }
         public List<string>Tag { get; set; }
         public DateTime CreatedDate { get; set; }
+        public int Status { get; set; }
     }
 }

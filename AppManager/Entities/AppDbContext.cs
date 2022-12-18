@@ -16,7 +16,7 @@ namespace AppAccountManager.Entities
         public DbSet<OrderDetailEntity> OrderDetailEntities { get; set; }
         public DbSet<DiscountEntity> DiscountEntities { get; set; }
         public DbSet<ShoppingCartEntity> ShoppingCartEntities { get; set; }
-        public DbSet<ShippingAddressEntity> AddressEntities { get; set; }
+        public DbSet<ShippingAddressEntity> ShippingAddressEntities { get; set; }
         public DbSet<CategoryBlogEntity> CategoryBlogEntities { get; set; }
         public DbSet<PostEntity> PostEntities { get; set; }
         public DbSet<PostImageEntity> PostImageEntities { get; set; }

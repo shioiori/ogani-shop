@@ -4,6 +4,7 @@ using AppManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Claims;
 
 namespace AppManager.Controllers
 {
@@ -40,32 +41,38 @@ namespace AppManager.Controllers
         [HttpPost]
         public IActionResult CheckOut(ShippingAddressModel location)
         {
-            // thêm địa chỉ vào address
             var account = HttpContext.Request.Cookies["account"];
-            var entity = new ShippingAddressEntity()
+            int addressId = location.Id;
+            // nếu xài địa chỉ có sẵn
+            if (addressId == 0)
             {
-                Account = account,
-                FirstName = location.FirstName,
-                LastName = location.LastName,
-                Address = location.Address,
-                City = location.City,
-                Country = location.Country,
-                Phone = location.Phone,
-                Postcode = location.Postcode,
-                CreatedDate = DateTime.Now,
-                UpdatedDate = DateTime.Now,
-                CreatedBy = account,
-                UpdatedBy = account
-            };
-            _dbContext.AddressEntities.Add(entity);
-            _dbContext.SaveChanges();
-
+                // thêm địa chỉ vào address
+                var entity = new ShippingAddressEntity()
+                {
+                    Account = account,
+                    FirstName = location.FirstName,
+                    LastName = location.LastName,
+                    Address = location.Address,
+                    City = location.City,
+                    Country = location.Country,
+                    Phone = location.Phone,
+                    Postcode = location.Postcode,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+                    CreatedBy = account,
+                    UpdatedBy = account
+                };
+                _dbContext.ShippingAddressEntities.Add(entity);
+                _dbContext.SaveChanges();
+                addressId = entity.Id;
+            }
             // lấy những sản phẩm trong giỏ ra
             var query = (from a in _dbContext.ShoppingCartEntities
                      join b in _dbContext.ProductEntities on a.ProductId equals b.Id
                      join c in _dbContext.DiscountEntities on b.Id equals c.ProductId into tbl
                      from t in tbl.DefaultIfEmpty()
                      where a.IsDeleted == false && a.Customer == account
+                     where a.Status == 0
                      select new ProductModel()
                      {
                          Id = b.Id,
@@ -87,7 +94,7 @@ namespace AppManager.Controllers
             {
                 OrderStatus = 1,
                 TotalPrice = total,
-                AddressId = entity.Id,
+                AddressId = addressId,
                 Account = account,
                 CreatedDate = DateTime.Now,
                 UpdatedDate = DateTime.Now,
@@ -98,9 +105,10 @@ namespace AppManager.Controllers
             // thêm các sp vào cthd
             foreach (var item in query)
             {
+                var id = order.Id;
                 _dbContext.OrderDetailEntities.Add(new OrderDetailEntity()
                 {
-                    ShopOrderId = order.Id,
+                    ShopOrderId = id,
                     ProductId = item.Id,
                     Quantity = item.Quantity,
                     Price = item.Price,
@@ -129,6 +137,39 @@ namespace AppManager.Controllers
             _dbContext.ShoppingCartEntities.UpdateRange(cart);
             _dbContext.SaveChanges();
             return Redirect("/Home/Index");
+        }
+
+        [HttpGet]
+        public IActionResult GetAddress()
+        {
+            try
+            {
+                var claims = HttpContext.User.Identity as ClaimsIdentity;
+                var accClaims = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+                var query = _dbContext.ShippingAddressEntities.Where(x => x.Account == accClaims)
+                                                          .Select(x => new ShippingAddressEntity()
+                                                          {
+                                                              Id = x.Id,
+                                                              Account = accClaims,
+                                                              FirstName = x.FirstName,
+                                                              LastName = x.LastName,
+                                                              Address = x.Address,
+                                                              City = x.City,
+                                                              Country = x.Country,
+                                                              Phone = x.Phone,
+                                                              Postcode = x.Postcode,
+                                                              CreatedDate = DateTime.Now,
+                                                              UpdatedDate = DateTime.Now,
+                                                              CreatedBy = x.CreatedBy,
+                                                              UpdatedBy = x.UpdatedBy
+                                                          });
+                return query.Any() ? Json(query.ToList()) : Json("");
+            }
+            catch (Exception ex)
+            {
+                return Json("");
+            }
+            
         }
     }
 }

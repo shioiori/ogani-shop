@@ -108,7 +108,7 @@
                                             $@((item.Price * item.Quantity).ToString("0.00"))
                                         </td>
                                         <td class="shoping__cart__item__close">
-                                            <span class="icon_close"></span>
+                                            <a href="/ShoppingCart/RemoveProduct?id=@item.CartId"><span id="icon-close" class="icon_close"></span></a>
                                         </td>
                                     </tr>
                                     total += item.Price * item.Quantity;
@@ -212,6 +212,5 @@
             $('#subtotal').html('$' + parseFloat(parseFloat(total) + parseFloat(price)).toFixed(2));
             $('#total').html('$' + parseFloat(parseFloat(total) + parseFloat(price)).toFixed(2));
         });
-
     </script>
 }

@@ -15,5 +15,6 @@
         public int CategoryId { get; set; }
         public string Avatar { get; set; }
         public int AvatarFileId { get; set; }
+        public int CartId { get; set; }
     }
 }
