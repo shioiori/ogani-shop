@@ -46,7 +46,17 @@
             <!-- /.box-header -->
             <div class="box-body no-padding">
               <div class="mailbox-read-info">
-                <h3>@Model.Title</h3>
+                <h3>@Model.Title
+                    <span class="mailbox-read-time pull-right">
+                            <a href="/Admin/Blog/AddOrUpdate?id=@Model.Id">
+                                <i class="fa fa-edit"></i>&nbsp;Edit 
+                            </a>
+                            |&nbsp;
+                            <a href="/Admin/Blog/Delete?id=@Model.Id">
+                                <i class="fa fa-close"></i>&nbsp;Delete 
+                            </a>
+                        </span>
+                </h3>
                 <h5>Written by: @Model.AuthorName
                   <span class="mailbox-read-time pull-right">@Model.CreatedDate.ToString("MMM d, yyyy")</span></h5>
                 

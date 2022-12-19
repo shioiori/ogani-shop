@@ -25,7 +25,7 @@ namespace AppManager.Areas.Admin.Controllers
         }
         public IActionResult ListOrder(int pageNumber = 1)
         {
-            int pageSize = 10;
+            int pageSize = 5;
             var query = (from a in _dbContext.ShopOrderEntities
                          join b in _dbContext.AccountManagerEntities on a.Account equals b.Account into tbl
                          from t in tbl.DefaultIfEmpty()

@@ -1,5 +1,4 @@
 ﻿using AppAccountManager.Entities;
-using AppManager.Entities;
 using AppManager.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -23,7 +22,7 @@ namespace AppManager.Controllers
             public int MaxPrice { get; set; }
         }
 
-        public IActionResult Index(int id)
+        public IActionResult Index(int id, int pageNumber = 1)
         {
             var discount = (from a in _dbContext.ProductEntities
                        join b in _dbContext.DiscountEntities on a.Id equals b.ProductId
@@ -71,11 +70,16 @@ namespace AppManager.Controllers
                            Avatar = y.FilePath,
                            AvatarFileId = y.Id
                        });
+            int pageSize = 12;
+            int total = prd.Count();
+            ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.pageSize = pageSize;
             var data = new ShoppingGrid()
             {
-                Discount = discount.Any() ? discount.ToList() : new List<ProductDiscountModel>(),
+                Discount = discount.Any() ? discount.Take(10).ToList() : new List<ProductDiscountModel>(),
                 Count = prd.Any() ? prd.Count() : 0,
-                ListProduct = prd.Any() ? prd.ToList() : new List<ProductModel>(),
+                ListProduct = prd.Any() ? prd.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList() : new List<ProductModel>(),
             };
             return View(data);
         }

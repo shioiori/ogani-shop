@@ -27,11 +27,11 @@ namespace AppManager.Areas.Admin.Controllers
 
         public IActionResult ListCategory(string name, int pageNumber = 1)
         {
-            int pageSize = 10;
+            int pageSize = 5;
             var query = (from c in _dbContext.CategoryEntities
                          join x in _dbContext.FileManageEntities on c.FileId equals x.Id
                          where x.IsDeleted == false
-                         where string.IsNullOrEmpty(name) || x.Name.ToLower().Contains(name.Trim().ToLower())
+                         where string.IsNullOrEmpty(name) || c.Name.ToLower().Contains(name.Trim().ToLower())
                          select new CategoryModel()
                          {
                             Id = c.Id,

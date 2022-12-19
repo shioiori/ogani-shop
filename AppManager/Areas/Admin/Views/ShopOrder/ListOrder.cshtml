@@ -90,6 +90,16 @@
                 </tbody>
                 </table>
             </div>
+            <div class="box-footer clearfix">
+                <ul class="pagination pagination-sm no-margin pull-right">
+                    <li><a href="/Admin/ShopOrder/ListOrder?pageNumber=@Math.Max(pageNumber-1,1)">&laquo;</a></li>
+                    @for (int i = 1; i <= pageCount; ++i)
+                    {
+                        <li><a href="/Admin/ShopOrder/ListOrder?pageNumber=@i">@i</a></li>
+                    }
+                    <li><a href="/Admin/ShopOrder/ListOrder?pageNumber=@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
+                </ul>
+            </div>
             <!-- /.box-body -->
             </div>
             <!-- /.box -->
@@ -98,12 +108,3 @@
         </div>
     <!-- /.row -->
 </section>
-
-@section Scripts{
-    <script>
-        function clickPage(pageNumber){
-            document.getElementById("txtPageNumber").value = pageNumber;
-            document.getElementById("formSearch").submit();
-        }
-    </script>
-}

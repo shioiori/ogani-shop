@@ -36,8 +36,7 @@ namespace AppManager.Controllers
 
         public IActionResult ListProduct(string name, int pageNumber = 1)
         {
-            int pageSize = 10;
-
+            int pageSize = 5;
             var query = (from x in _dbContext.ProductImageEntities
                     join y in _dbContext.FileManageEntities on x.FileId equals y.Id
                     join z in _dbContext.ProductEntities on x.ProductId equals z.Id

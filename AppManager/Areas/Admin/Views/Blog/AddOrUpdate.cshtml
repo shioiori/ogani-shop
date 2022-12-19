@@ -2,6 +2,8 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Dashboard";
     string error = TempData["error"] as string;
+    string alert = TempData["alert"] as string;
+    int categoryId = Model != null ? Model.CategoryId : -1;
 }
 
 <section class="content-header">
@@ -32,41 +34,55 @@
                     <h3 class="box-title">Quản lý bài viết</h3>
                 </div>
                 <div class="box-body">
+                        @{
+                            if (alert != null)
+                            {
+                                <div class="callout callout-success">
+                                   <p>@alert</p>
+                                </div>
+                            }
+                        }
                         <input type="text" name="id" value="@(Model == null ? 0 : @Model.Id)" hidden />
                         <input type="text" name="avatarId" id="image-file-id" value="@(Model == null ? 0 : @Model.AvatarId)" hidden />
                         <input type="text" name="avatar" id="image-file-path" value="@(Model == null ? "" : @Model.Avatar)" hidden />
                         <input type="text" name="status" id="post-status" value="@(Model == null ? 0 : @Model.Status)" hidden />
                         <input type="text" name="categoryId" id="category-id" value="@(Model == null ? 0 : @Model.CategoryId)" hidden />
+                        <input type="text" name="status" id="post-status" value="@(Model == null ? 0 : @Model.Status)" hidden />
                         <div class="form-group">
+                            <label for="exampleInputFile">Title</label>
                             <input class="form-control" placeholder="Tiêu đề:" value="@(Model == null ? "" : Model.Title)" name="title">
                         </div>
                         <div class="form-group">
+                            <label for="exampleInputFile">Description</label>
                             <input class="form-control" placeholder="Description:" value="@(Model == null ? "" : Model.Description)" name="description">
                         </div>
                         <div class="form-group">
-                            <textarea id="txt-content" value="@(Model == null ? "" : Html.Raw(Model.Content))" class="form-control" style="height: 300px" name="content">
-                            </textarea>
+                            <textarea id="txt-content" class="form-control" style="height: 300px" name="content" value="@Html.Raw(Model == null ? "" : Model.Content)"></textarea>
                         </div>
                         <div class="form-group">
+                            <label for="exampleInputFile">Category</label>
                             <select class="form-control select2" id="category-blog" style="width: 100%;">
                             </select>
                         </div>
                         <div class="form-group">
+                            <label for="exampleInputFile">Tags</label><br />
                             @{
                                 var tags = "";
                                 if (Model != null)
                                 {
                                     foreach(var tag in Model.Tag)
                                     {
-                                        tags += tag + ", ";
+                                        tags += tag + ",";
                                     }
                                 }
-                                tags = tags.Substring(0, Math.Max(0, tags.Length - 2));
                             }
-                            <input class="form-control" placeholder="Tags:" value="@tags" name="tag">
+                            <input type="text" class="form-control" placeholder="Tags:" value="@tags" name="tag" id="tags-input" data-role="tagsinput">
                         </div>
                         <div class="form-group">
                               <label for="exampleInputFile">Ảnh đại diện</label>
+                              <div class="col-md-12 text-center">
+                                    <img src="@(Model != null ? Model.Avatar : "/img/default.jpg")" id="image-upload" class="rounded mx-auto d-block" style="width: 256px" />
+                                </div>
                               <input type="file" id="image-upload" name="fileUpload">
                               <p class="help-block">Chọn ảnh đại diện cho bài viết</p>
                         </div>
@@ -74,10 +90,9 @@
                 <!-- /.box-body -->
                 <div class="box-footer">
                     <div class="pull-right">
-                        <button type="button" class="btn btn-default btnsubmit" name="save"><i class="fa fa-pencil"></i> Lưu bản nháp</button>
+                        <button type="submit" class="btn btn-default btnsubmit" name="save"><i class="fa fa-pencil"></i> Lưu bản nháp</button>
                         <button type="submit" class="btn btn-primary btnsubmit" name="submit"><i class="fa fa-envelope-o"></i> Gửi đi</button>
                     </div>
-                    <button type="reset" class="btn btn-default btnsubmit" name="delete"><i class="fa fa-times"></i> Huỷ</button>
                 </div>
 
             </form>
@@ -97,14 +112,17 @@
             .catch( error => {
                 console.error( error );
             } );
-    
-      
 
-        $(document).ready(function (){
-            $(document).on('click', '.btnsubmit', function() {
-                btn = $(this).attr('name');
-                console.log(btn);
-            })
+        $('#tags-input').tagsinput();
+
+        $(document).on('click', '.btnsubmit', function() {
+            btn = $(this).attr('name');
+            if (btn == "submit"){
+                $('#post-status').val(0);
+            }
+            else {
+                $('#post-status').val(1);
+            }
         });
 
         $(document).on('change', 'input[name="fileUpload"]', function() {
@@ -160,7 +178,9 @@
                 console.log(data);
                 data.forEach(function(item,index){
                     let html = `<option id="${item.id}">${item.name}</option>`;
-                    
+                    if (item.id == "@categoryId"){
+                        html = `<option id="${item.id}" selected>${item.name}</option>`;
+                    }
                     $('#category-blog').append(html);  
                 });          
             },

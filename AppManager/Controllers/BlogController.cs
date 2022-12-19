@@ -26,7 +26,7 @@ namespace AppManager.Controllers
                              join b in _dbContext.PostImageEntities on a.Id equals b.PostId
                              join c in _dbContext.FileManageEntities on b.FileId equals c.Id
                              join d in _dbContext.CategoryBlogEntities on a.CategoryId equals d.Id
-                             where a.IsDeleted == false
+                             where a.IsDeleted == false && a.Status == 0
                              where b.IsDeleted == false && b.IsAvatar == true
                              where d.Id == r
                              orderby a.CreatedDate descending
@@ -52,7 +52,7 @@ namespace AppManager.Controllers
                              join c in _dbContext.FileManageEntities on b.FileId equals c.Id
                              join d in _dbContext.PostTagEntities on a.Id equals d.PostId
                              join e in _dbContext.TagEntities on d.TagId equals e.Id
-                             where a.IsDeleted == false
+                             where a.IsDeleted == false && a.Status == 0
                              where b.IsDeleted == false && b.IsAvatar == true
                              where d.IsDeleted == false
                              where e.IsDeleted == false && e.Slug == arg
@@ -77,7 +77,7 @@ namespace AppManager.Controllers
                 var query = (from a in _dbContext.PostEntities
                              join b in _dbContext.PostImageEntities on a.Id equals b.PostId
                              join c in _dbContext.FileManageEntities on b.FileId equals c.Id
-                             where a.IsDeleted == false
+                             where a.IsDeleted == false && a.Status == 0
                              where b.IsDeleted == false && b.IsAvatar == true
                              orderby a.CreatedDate descending
                              select new PostModel()
@@ -116,7 +116,7 @@ namespace AppManager.Controllers
             var query = (from a in _dbContext.PostEntities
                          join b in _dbContext.PostImageEntities on a.Id equals b.PostId
                          join c in _dbContext.FileManageEntities on b.FileId equals c.Id
-                         where a.IsDeleted == false
+                         where a.IsDeleted == false && a.Status == 0 
                          where b.IsDeleted == false && b.IsAvatar == true
                          orderby a.CreatedDate descending
                          select new PostModel()

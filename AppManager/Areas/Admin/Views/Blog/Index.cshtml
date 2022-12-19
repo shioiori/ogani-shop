@@ -2,6 +2,12 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Dashboard";
     string error = TempData["error"] as string;
+    string account = TempData["Account"] as string;
+    int pageCount = (int)ViewBag.pageCount;
+    int pageNumber = (int)ViewBag.pageNumber;
+    int pageSize = (int)ViewBag.pageSize;
+    int stt = pageSize * pageNumber - (pageSize - 1);
+    string name = ViewBag.name;
 }
 
 <section class="content-header">
@@ -49,21 +55,40 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Tất cả bài viết</h3>
                 <div class="box-tools pull-right">
-                <div class="has-feedback">
-                    <input type="text" class="form-control input-sm" placeholder="Tìm kiếm bài viết...">
-                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                </div>
+                    <div class="has-feedback">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="name" class="form-control pull-right" id="input-search" placeholder="Search" value="@name">
+                            <div class="input-group-btn">
+                                <a href="###"><button class="btn btn-default" id="form-search"><i class="fa fa-search"></i></button></a>
+                            </div>
+                            <input type="number" name="pageNumber" id="txtPageNumber" value="1" hidden/>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.box-tools -->
             </div>  
             <div class="tab-content" style="margin: 1.5rem">
                     @{
-                        foreach (var item in @Model)
+                        foreach (var item in Model)
                         {
                             <div class="post">
                                 <div class="user-block">
                                 <img class="img-circle img-bordered-sm" src="@item.Avatar" alt="user image">
                                     <span class="username">
+                                        @{
+                                            if (item.Account == account) 
+                                            {
+                                                <span class="mailbox-read-time pull-right">
+                                                    <a href="/Admin/Blog/AddOrUpdate?id=@item.Id" class="link-primary">
+                                                        <i class="fa fa-edit"></i>&nbsp;Edit
+                                                    </a>
+                                                    |&nbsp;
+                                                    <a href="/Admin/Blog/Delete?id=@item.Id">
+                                                        <i class="fa fa-close"></i>&nbsp;Delete 
+                                                    </a>
+                                                </span>
+                                            }
+                                        }
                                         <a href="/Admin/Blog/Post?id=@item.Id">@item.Title</a>
                                         <a href="#" class="pull-right btn-box-tool"></a>
                                     </span>
@@ -78,7 +103,17 @@
                     }
             </div>
             <div class="box-footer">
-                </div>
+                <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li><a href="/Admin/Blog/Index?name=@name&&pageNumber=@Math.Max(pageNumber-1,1)">&laquo;</a></li>
+                            @for (int i = 1; i <= pageCount; ++i)
+                            {
+                                <li><a href="/Admin/Blog/Index?name=@name&&pageNumber=@i">@i</a></li>
+                            }
+                            <li><a href="/Admin/Blog/Index?name=@name&&pageNumber=@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
+                        </ul>
+                    </div>
+            </div>
           </div>
           <!-- /. box -->
         </div>
@@ -103,5 +138,11 @@
             error: function(){},
             complete: function(){}
         });
+
+        $('#form-search').on('click', function(){
+            let link = "/Admin/Blog/Index?name=" + $('#input-search').val();
+            $("a[href='###']").attr('href', link);
+            $('#form-search')[0].click();
+        })
     </script>
 }

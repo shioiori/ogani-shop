@@ -18,5 +18,6 @@ namespace AppManager.Models
         public List<string>Tag { get; set; }
         public DateTime CreatedDate { get; set; }
         public int Status { get; set; }
+        public string Account { get; set; }
     }
 }

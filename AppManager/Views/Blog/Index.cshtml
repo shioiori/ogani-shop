@@ -141,7 +141,7 @@
                              <div class="col-lg-6 col-md-6 col-sm-6">
                                 <div class="blog__item">
                                     <div class="blog__item__pic">
-                                        <img src="@item.PostAvatarFilePath" alt="">
+                                        <img src="@item.PostAvatarFilePath" alt="" style="width: 360px; height: 260px">
                                     </div>
                                     <div class="blog__item__text">
                                         <ul>
@@ -221,10 +221,10 @@
                 data.forEach(function (item,index){
                     var words = item.title.split(" ");
                     var a = "", b = "";
-                    for (let i = 0; i < words.length/2; ++i){
+                    for (let i = 0; i < parseInt((words.length+1)/2); ++i){
                         a += words[i].charAt(0).toUpperCase() + words[i].substring(1) + " ";
                     }
-                    for (let i = parseInt(words.length/2); i < words.length; ++i){
+                    for (let i = parseInt((words.length+1)/2); i < words.length; ++i){
                         b += words[i].charAt(0).toUpperCase() + words[i].substring(1) + " ";
                     }
                     let row = `<a href="/BlogDetail/Post?id=${item.id}" class="blog__sidebar__recent__item">

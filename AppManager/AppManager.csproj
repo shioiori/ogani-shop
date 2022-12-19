@@ -19,6 +19,7 @@
     <Folder Include="wwwroot\admin\plugins\ckfinder\userfiles\" />
     <Folder Include="wwwroot\img\blog\avatar\" />
     <Folder Include="wwwroot\img\category\" />
+    <Folder Include="wwwroot\img\user-avatar\" />
     <Folder Include="wwwroot\img\product-image\" />
   </ItemGroup>
 

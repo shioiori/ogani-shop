@@ -1,6 +1,7 @@
 ﻿@{
     string error = TempData["Error"] as string;
 }
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,7 +35,7 @@
         </div>
         <!-- /.login-logo -->
         <div class="login-box-body">
-            <p class="login-box-msg">Sign in to start your session</p>
+            <p class="login-box-msg">Sign up to start your session</p>
             @{
                 if (error != null)
                 {
@@ -43,27 +44,51 @@
                     </div>
                 }
             }
-            <form action="/admin/account/login" method="post">
-                <input type="text" name="ReturnUrl" value="@ViewBag.ReturnUrl" hidden/>
+            <form action="/admin/account/signup" method="post">
                 <div class="form-group has-feedback">
-                    <input type="text" class="form-control" name="Account" placeholder="Tài khoản...">
+                    <input type="text" id="image-file-path" name="avatarPath" hidden>
+                    <input type="text" id="image-file-id" name="avatarId" hidden>
+                    <div class="col-md-12 text-center" style="padding-bottom: 1rem">
+                        <img src="/img/default.jpg" id="image-upload" class="img-circle rounded mx-auto d-block" style="width: 256px" />
+                    </div>
+                    <input type="file" name="fileUpload" id="exampleInputFile">
+                    <i class="help-block">Upload avatar của tài khoản</i>  
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" name="Account" placeholder="Account...">
                     <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
                 </div>
                 <div class="form-group has-feedback">
-                    <input type="password" class="form-control" name="Password" placeholder="Mật khẩu...">
+                    <input type="password" class="form-control" name="Password" placeholder="Password...">
+                    <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" name="FirstName" placeholder="First Name...">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" name="LastName" placeholder="LastName...">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="text" class="form-control" name="Phone" placeholder="Phone...">
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input type="email" class="form-control" name="Email" placeholder="Email...">
                     <span class="glyphicon glyphicon-lock form-control-feedback"></span>
                 </div>
                 <div class="row">
                     <div class="col-xs-8">
-                        <div class="checkbox icheck">
-                            <label>
-                                <input type="checkbox"> Remember Me
-                            </label>
-                        </div>
+                      <div class="checkbox icheck">
+                        <label>
+                          <input type="checkbox"> I agree to the <a href="#">terms</a>
+                        </label>
+                      </div>
                     </div>
                     <!-- /.col -->
                     <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng nhập</button>
+                      <button type="submit" class="btn btn-primary btn-block btn-flat">Đăng ký</button>
                     </div>
                     <!-- /.col -->
                 </div>
@@ -82,8 +107,7 @@
             </div>
             <!-- /.social-auth-links -->
 
-            <a href="#">I forgot my password</a><br>
-            <a href="/Admin/Account/SignUp" class="text-center">Register a new membership</a>
+            <a href="/admin/account/login" class="text-center">Have an account? Login now!</a>
 
         </div>
         <!-- /.login-box-body -->
@@ -102,6 +126,35 @@
             radioClass: 'iradio_square-blue',
             increaseArea: '20%' // optional
           });
+        });
+
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/admin/account/uploadfile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    if (res.status == 'success'){
+                        $('#image-upload').attr('src', res.fileInfo.filePath);
+                        $('#image-file-path').val(res.fileInfo.filePath);
+                        $('#image-file-id').val(res.fileInfo.id);
+                    }
+                    else {
+                        alert("Error!");
+                    }
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
         });
     </script>
 </body>

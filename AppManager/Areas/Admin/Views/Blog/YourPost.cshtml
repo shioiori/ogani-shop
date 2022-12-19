@@ -2,6 +2,12 @@
     Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Dashboard";
     string error = TempData["error"] as string;
+    int pageCount = (int)ViewBag.pageCount;
+    int pageNumber = (int)ViewBag.pageNumber;
+    int pageSize = (int)ViewBag.pageSize;
+    int stt = pageSize * pageNumber - (pageSize - 1);
+    string name = ViewBag.name;
+    int status = (int)ViewBag.status;
 }
 
 <section class="content-header">
@@ -43,13 +49,16 @@
             <div class="box-header with-border">
                 <h3 class="box-title">Bài viết của bạn</h3>
                 <div class="box-tools pull-right">
-                <div class="has-feedback">
-                    <input type="text" class="form-control input-sm" placeholder="Tìm kiếm bài viết...">
-                    <span class="glyphicon glyphicon-search form-control-feedback"></span>
-                </div>
+                    <div class="has-feedback">
+                        <div class="input-group input-group-sm" style="width: 150px;">
+                            <input type="text" name="name" class="form-control pull-right" id="input-search" placeholder="Search" value="@name">
+                            <div class="input-group-btn">
+                                <a href="###"><button class="btn btn-default" id="form-search"><i class="fa fa-search"></i></button></a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.box-tools -->
-            </div>  
             <div class="tab-content" style="margin: 1.5rem">
                     @{
                         foreach (var item in @Model)
@@ -59,6 +68,15 @@
                                 <img class="img-circle img-bordered-sm" src="@item.Avatar" alt="user image">
                                     <span class="username">
                                         <a href="/Admin/Blog/Post?id=@item.Id">@item.Title</a>
+                                          <span class="mailbox-read-time pull-right">
+                                            <a href="/Admin/Blog/AddOrUpdate?id=@item.Id" class="link-primary">
+                                                <i class="fa fa-edit"></i>&nbsp;Edit
+                                            </a>
+                                            |&nbsp;
+                                            <a href="/Admin/Blog/Delete?id=@item.Id">
+                                                <i class="fa fa-close"></i>&nbsp;Delete 
+                                            </a>
+                                        </span>
                                         <a href="#" class="pull-right btn-box-tool"></a>
                                     </span>
                                 <span class="description">Written by @item.AuthorName - Shared public - @item.CreatedDate.ToString("MMM d, yyyy")</span>
@@ -72,7 +90,17 @@
                     }
             </div>
             <div class="box-footer">
-                </div>
+                <div class="box-footer clearfix">
+                        <ul class="pagination pagination-sm no-margin pull-right">
+                            <li><a href="/Admin/Blog/YourPost?name=@name&&status=@status&&pageNumber=@Math.Max(pageNumber-1,1)">&laquo;</a></li>
+                            @for (int i = 1; i <= pageCount; ++i)
+                            {
+                                <li><a href="/Admin/Blog/YourPost?name=@name&&status=@status&&pageNumber=@i">@i</a></li>
+                            }
+                            <li><a href="/Admin/Blog/YourPost?name=@name&&status=@status&&pageNumber=@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
+                        </ul>
+                    </div>
+            </div>
           </div>
           <!-- /. box -->
         </div>
@@ -81,5 +109,10 @@
 
 @section Scripts{
     <script>
+        $('#form-search').on('click', function(){
+            let link = "/Admin/Blog/YourPost?name=" + $('#input-search').val() + "&&status=" + @status;
+            $("a[href='###']").attr('href', link);
+            $('#form-search')[0].click();
+        })
     </script>
 }
