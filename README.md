@@ -14,7 +14,5 @@ Frontend được lấy từ: https://themewagon.com/themes/free-bootstrap-4-htm
 - Hiển thị blog trên web.
 ## Chức năng đang dở
 - Đăng ký
-- Thanh toán
-- Hiện ra những địa chỉ đã từng mua khi thanh toán để không phải nhập lại
-- Đăng bài viết
-- Giao diện trang chính vẫn lỗi html chưa fix xong
+- Nạp cổng thanh toán
+- Chưa chỉnh sửa ui blog xong
