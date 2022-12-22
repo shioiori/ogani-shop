@@ -2900,6 +2900,32 @@ ol {
 	letter-spacing: 2px;
 }
 
+ol {
+	padding-left: 0;
+	margin-left: 0;
+	list-style-type: none;
+}
+
+ol > li {
+	list-style-type: none;
+	margin-bottom: .5em;
+	margin-left: 1.5rem;
+}
+
+ol > li input[type=radio] {
+	display: -moz-inline-box;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+ol > li label {
+	display: -moz-inline-box;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+
+
 /*--------------------------------- Responsive Media Quaries -----------------------------*/
 
 @media only screen and (min-width: 1200px) {

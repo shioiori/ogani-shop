@@ -1,6 +1,7 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
     var total = 0;
+    string error = TempData["error"] as string;
 }
 <section class="hero hero-normal">
     <div class="container">
@@ -75,10 +76,21 @@
     <div class="container">
         <div class="checkout__form">
             <h4>Billing Details</h4>
+            @{
+                if (error != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                      @error
+                    </div>
+                }
+            }
             <form action="/CheckOut/CheckOut" method="post">
                 <div class="row">
                     <input type="text" name="id" id="addressid" value="0" hidden/>
-                    <div class="col-lg-8 col-md-6" id="address">
+                    <div class="col-lg-8 col-md-6">
+                        <ol id="address">
+
+                        </ol>
                         <div class="col-md-12" id="address-form" style="display: none">
                             <div class="row">
                                 <div class="col-lg-6">
@@ -295,30 +307,28 @@
             beforeSend: function(){},
             success: function(data){
                 if (data != ""){
-                    $('#address').prepend(`<div class="radio">
-                                                  <label>
-                                                    <input type="radio" class="address" id="0" name="check-address"> Khác 
-                                                  </label>
-                                                </div>
-                                                <br>`);
+                    $('#address').prepend(`<li style="list-style-type: none">
+                                                <input type="radio" id="0" class="address" name="check-address">
+                                                <label for="0">
+                                                    Khác
+                                                </label>
+                                            </li>`);
                     data.forEach(function (item,index){
-                        let row = `<div class="radio">
-                                        <label>
+                        let row = `<li style="list-style-type: none">
                                         <input type="radio" id="${item.id}" class="address" name="check-address">
-                                            <div style="padding: 1rem; outline: dashed #7fad39; display: inline-block">
+                                        <label for="${item.id}"> 
                                             Họ tên: ${item.firstName} ${item.lastName}
                                             <br>Địa chỉ: ${item.address}, ${item.city}, ${item.country}
                                             <br>Postcode: ${item.postcode}
                                             <br>Số điện thoại: ${item.phone}
-                                            </div>
                                         </label>
-                                    </div>
-                                    <br>`;
+                                    </li>
+                                    <hr>`;
                         $('#address').prepend(row);
                     });
                 }
                 else {
-                    $("#address-form").css("display", "block");
+                    $("#address-form").css("display", "inline-block");
                 }
             },
             error: function(){},

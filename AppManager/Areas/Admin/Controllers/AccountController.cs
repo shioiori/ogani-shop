@@ -52,6 +52,12 @@ namespace AppAccountManager.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(AccountManagerModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                var error = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                TempData["Error"] = error.FirstOrDefault();
+                return Redirect("/admin/account/login");
+            }
             var query = _dbContext.AccountManagerEntities.Where(a => a.Account == model.Account && a.Password == model.Password)
                                                   .Select(a => new AccountManagerModel()
                                                     {
@@ -70,6 +76,7 @@ namespace AppAccountManager.Areas.Admin.Controllers
                 var claimIndentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimIndentity));
                 HttpContext.Response.Cookies.Append("account", account.Account);
+                
                 if (account.Role == "customer")
                 {
                     return Redirect("/Home/Index");
@@ -95,6 +102,12 @@ namespace AppAccountManager.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult SignUp(UserModel user)
         {
+            if (!ModelState.IsValid)
+            {
+                var error = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                TempData["Error"] = error.FirstOrDefault();
+                return Redirect("/admin/account/signup");
+            }
             var query = _dbContext.UserEntities.Where(x => x.Account == user.Account || x.Email == user.Email)
                                                .Select(x => new UserEntity() { });
             if (query.Any())

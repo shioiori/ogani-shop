@@ -50,7 +50,7 @@ namespace AppManager.Controllers
             var query = (from a in _dbContext.PostEntities
                          join b in _dbContext.PostImageEntities on a.Id equals b.PostId
                          join c in _dbContext.FileManageEntities on b.FileId equals c.Id
-                         where a.IsDeleted == false && a.Id != id
+                         where a.IsDeleted == false && a.Id != id && a.Status == 0
                          where b.IsDeleted == false && b.IsAvatar == true
                          orderby a.CreatedDate descending
                          select new PostModel()

@@ -41,6 +41,12 @@ namespace AppManager.Controllers
         [HttpPost]
         public IActionResult CheckOut(ShippingAddressModel location)
         {
+            if (!ModelState.IsValid)
+            {
+                var error = ModelState.Values.SelectMany(x => x.Errors).Select(x => x.ErrorMessage);
+                TempData["Error"] = error.FirstOrDefault();
+                return Redirect("/CheckOut/CheckOut");
+            }
             var account = HttpContext.Request.Cookies["account"];
             int addressId = location.Id;
             // nếu xài địa chỉ có sẵn

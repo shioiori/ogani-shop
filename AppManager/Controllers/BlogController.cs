@@ -18,8 +18,9 @@ namespace AppManager.Controllers
         // asp.net k chấp nhận overloading
 
         [HttpGet]
-        public IActionResult Index(string arg)
+        public IActionResult Index(string arg, int pageNumber = 1)
         {
+            int pageSize = 6;
             if (Int32.TryParse(arg, out int r))
             {
                 var query = (from a in _dbContext.PostEntities
@@ -43,7 +44,12 @@ namespace AppManager.Controllers
                                  CreatedBy = a.CreatedBy,
                                  UpdatedBy = a.UpdatedBy
                              }).ToList();
-                return View(query);
+                int total = query.Count();
+                ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
+                ViewBag.pageNumber = pageNumber;
+                ViewBag.pageSize = pageSize;
+                ViewBag.arg = arg;
+                return View(query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList());
             }
             else if (arg != null)
             {
@@ -70,7 +76,12 @@ namespace AppManager.Controllers
                                  CreatedBy = a.CreatedBy,
                                  UpdatedBy = a.UpdatedBy
                              }).ToList();
-                return View(query);
+                int total = query.Count();
+                ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
+                ViewBag.pageNumber = pageNumber;
+                ViewBag.pageSize = pageSize;
+                ViewBag.arg = arg;
+                return View(query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList());
             }
             else
             {
@@ -93,7 +104,12 @@ namespace AppManager.Controllers
                                  CreatedBy = a.CreatedBy,
                                  UpdatedBy = a.UpdatedBy
                              }).ToList();
-                return View(query);
+                int total = query.Count();
+                ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
+                ViewBag.pageNumber = pageNumber;
+                ViewBag.pageSize = pageSize;
+                ViewBag.arg = arg;
+                return View(query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList());
             }
         }
 

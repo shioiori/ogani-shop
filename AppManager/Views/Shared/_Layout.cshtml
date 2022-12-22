@@ -37,12 +37,10 @@
         </div>
         <div class="humberger__menu__cart">
             <ul>
-                <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="/ShoppingCart/Index"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="/ShoppingCart/Index"><i class="fa fa-shopping-bag"></i></a></li>
             </ul>
-            <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
-        <div class="humberger__menu__widget">
+        <div class="humberger__menu__widget" id="menu-widget">
             <div class="header__top__right__language">
                 <img src="/img/language.png" alt="">
                 <div>English</div>
@@ -52,8 +50,10 @@
                     <li><a href="#">English</a></li>
                 </ul>
             </div>
-            <div class="header__top__right__auth" id="log-user"">
-                <a href="/Admin/Account/Login"><i class="fa fa-user"></i> Login</a>
+            <div class="header__top__right__auth" id="log-user">
+                <a href="/Admin/Account/Login"><i class="fa fa-user"></i>
+                <span id="log-user-humberger">Login</span>
+                </a>
             </div>
         </div>
         <nav class="humberger__menu__nav mobile-menu">
@@ -100,25 +100,21 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6">
-                        <div class="header__top__right">
-                            <div class="header__top__right__social">
-                                <a href="#"><i class="fa fa-facebook"></i></a>
-                                <a href="#"><i class="fa fa-twitter"></i></a>
-                                <a href="#"><i class="fa fa-linkedin"></i></a>
-                                <a href="#"><i class="fa fa-pinterest-p"></i></a>
-                            </div>
+                    <div class="col-lg-6 col-md-6" >
+                        <div class="header__top__right" id="top-bar">
                             <div class="header__top__right__language">
                                 <img src="/img/language.png" alt="">
                                 <div>English</div>
                                 <span class="arrow_carrot-down"></span>
                                 <ul>
-                                    <li><a href="#">Spanis</a></li>
+                                    <li><a href="#">Vietnamese</a></li>
                                     <li><a href="#">English</a></li>
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="/Admin/Account/Login"><i class="fa fa-user"></i> Login</a>
+                                <a href="/Admin/Account/Login"><i class="fa fa-user"></i>
+                                    <span id="user-login">Login</span>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -153,10 +149,8 @@
                 <div class="col-lg-3">
                     <div class="header__cart">
                         <ul>
-                            <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="/ShoppingCart/Index"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="/ShoppingCart/Index"><i class="fa fa-shopping-bag"></i></a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
                     </div>
                 </div>
             </div>
@@ -249,6 +243,28 @@
     <script src="~/js/mixitup.min.js"></script>
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/main.js"></script>
+    <script>
+        $.ajax({
+            url: "/Home/GetAccount",
+            type: "GET",
+            dataType: "json",
+            success: function(data){
+                console.log(data);
+                if (data != ""){
+                    $('#log-user-humberger').text(data);
+                    $('#user-login').text(data);
+                    $('#top-bar').append(`<div class="header__top__right__auth">
+                                            <a href="/Admin/Account/SignOut"><i class="fa fa-sign-out"></i>
+                                            </a>
+                                        </div>`);
+                    $('#menu-widget').append(`<div class="header__top__right__auth">
+                                            <a href="/Admin/Account/SignOut"><i class="fa fa-sign-out"></i>
+                                            </a>
+                                        </div>`);
+                }
+            }
+        })
+    </script>
     @RenderSection("Scripts", false)
 </body>
 </html>
