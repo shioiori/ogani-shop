@@ -123,6 +123,7 @@ namespace AppManager.Controllers
                                       Slug = item.Key.Slug,
                                       Quantity = item.Sum(x => x.Quantity)
                                   })
+                                  .OrderByDescending(item => item.Quantity)
                                   .ToList().Take(5);
             List<CategoryProductModel>listCategories = new List<CategoryProductModel>();
             int maxStore = 8;
@@ -156,7 +157,7 @@ namespace AppManager.Controllers
                                     Avatar = item.Key.Avatar,
                                     AvatarFileId = item.Key.AvatarFileId,
                                     Quantity = item.Sum(a => a.Quantity),
-                              }).OrderBy(x => x.Quantity).ToList();
+                              }).OrderByDescending(x => x.Quantity).ToList();
                 int take = list.Count <= maxStore ? list.Count : maxStore;
                 maxStore -= take;
                 var listPrd = list.Take(take).ToList();

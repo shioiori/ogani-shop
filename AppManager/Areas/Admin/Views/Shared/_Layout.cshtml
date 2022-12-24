@@ -340,7 +340,7 @@
                     </ul>
                   </li>
                   <li>
-                    <a href="#">
+                    <a href="/Admin/Report/Index">
                       <i class="fa fa-th"></i> <span>Báo cáo</span>
                     </a>
                   </li>
@@ -407,10 +407,12 @@
         <script src="~/admin/dist/js/demo.js"></script>
         <!--CKEditor-->
         <script src="~/admin/plugins/ckfinder/ckfinder.js"></script>
+        
         <script src="~/admin/plugins/ckeditor5-build-classic/ckeditor.js"></script>
         <!--Tags input-->
         <script src="https://cdn.jsdelivr.net/bootstrap.tagsinput/0.4.2/bootstrap-tagsinput.min.js"></script>
-
+        <!--Chart-->
+        <script src="~/admin/plugins/chartjs/Chart.min.js"></script>
         <script>
             $.ajax({
                 url: "/Admin/Home/GetAccount",
@@ -418,6 +420,7 @@
                 dataType: "json",
                 success: function(data){
                     let date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full'}).format(new Date(Date.parse(data.createdDate)));
+                    var acc = data.role.charAt(0).toUpperCase() + data.role.slice(1);
                     let row = `<a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                     <img src="${data.avatarPath}" style="width:25px; height:25px" class="user-image" alt="User Image">
                                     <span class="hidden-xs">${data.firstName} ${data.lastName}</span>
@@ -428,7 +431,7 @@
                                         <img src="${data.avatarPath}" style="width:90px; height:90px" class="img-circle" alt="User Image">
 
                                         <p>
-                                            ${data.firstName} ${data.lastName} - ${data.role}
+                                            ${data.firstName} ${data.lastName} - ${acc}
                                             <small>Member since ${date}</small>
                                         </p>
                                     </li>

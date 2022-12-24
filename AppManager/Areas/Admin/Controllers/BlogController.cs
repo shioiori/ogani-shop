@@ -10,6 +10,7 @@ using System.IO;
 using AppManager.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace AppManager.Areas.Admin.Controllers
 {
@@ -61,7 +62,7 @@ namespace AppManager.Areas.Admin.Controllers
                              AuthorName = h.FirstName + " " + h.LastName,
                              CreatedDate = a.CreatedDate,
                              Description = a.Description,
-                             Content = a.Content,
+                             Content = Regex.Replace(a.Content, @"\t|\n|\r", ""),
                              AuthorRole = e.Role,
                              CategoryId = b.Id,
                              Category = b.Name,

@@ -18,10 +18,6 @@ namespace AppManager.Areas.Admin.Controllers
         {
             _dbContext = dbContext;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         [HttpGet]
         public IActionResult GetAccount()
@@ -45,6 +41,29 @@ namespace AppManager.Areas.Admin.Controllers
                             CreatedDate = a.CreatedDate,
                         }).First();
             return Json(user);
+        }
+
+        public IActionResult Index(int pageNumber = 1)
+        {
+            int pageSize = 5;
+            var query = (from a in _dbContext.ShopOrderEntities
+                         join b in _dbContext.AccountManagerEntities on a.Account equals b.Account into tbl
+                         from t in tbl.DefaultIfEmpty()
+                         where a.IsDeleted == false
+                         select new ShopOrderModel()
+                         {
+                             ShopOrderId = a.Id,
+                             OrderStatus = a.OrderStatus,
+                             TotalPrice = a.TotalPrice,
+                             Account = t.Account == null ? null : a.Account,
+                             CreatedDate = a.CreatedDate,
+                         }).ToList();
+            var total = query.Count();
+            ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
+            ViewBag.pageNumber = pageNumber;
+            ViewBag.pageSize = pageSize;
+            var listCategory = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            return View(query);
         }
     }
 }

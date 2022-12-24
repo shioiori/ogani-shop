@@ -1,4 +1,6 @@
-﻿namespace AppManager.Models
+﻿using System;
+
+namespace AppManager.Models
 {
     public class ProductModel
     {
@@ -13,8 +15,10 @@
         public double Weight { get; set; }
         public string Unit { get; set; }
         public int CategoryId { get; set; }
+        public string Category { get; set; }
         public string Avatar { get; set; }
         public int AvatarFileId { get; set; }
         public int CartId { get; set; }
+        public DateTime CreatedDate { get; set; }
     }
 }

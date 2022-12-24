@@ -141,7 +141,6 @@ F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\S
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\ShoppingCart\Index.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\CheckOut\CheckOut.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\ProductDetail\Product.cshtml.g.cs
-F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\ShopOrder\ListOrder.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\ShopOrder\OrderDetail.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\Blog\Index.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Views\BlogDetail\Post.cshtml.g.cs
@@ -151,3 +150,5 @@ F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\A
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Blog\YourPost.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\bin\Debug\netcoreapp3.1\AppManager.dll.config
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Account\SignUp.cshtml.g.cs
+F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Report\Index.cshtml.g.cs
+F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Home\ListOrder.cshtml.g.cs
