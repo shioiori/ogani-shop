@@ -65,6 +65,7 @@
                                         <td>@item.Weight @item.Unit</td>
                                         <td><img src="@item.Avatar" style="width:128px"></td>
                                         <td>
+                                            <a href="/Admin/Product/AddDiscount?productId=@item.Id" class="btn btn-default btn-primary" style="color: white">Thêm mã giảm giá</a>
                                             <a href="/Admin/Product/AddImage?id=@item.Id" class="btn btn-default btn-info" style="color: white">Thêm ảnh</a>
                                             <a href="/Admin/Product/AddOrUpdate?id=@item.Id" class="btn btn-default btn-warning" style="color: white">Sửa</a>
                                             <a href="/Admin/Product/Delete?id=@item.Id" class="btn btn-default btn-danger" style="color: white">Xóa</a>

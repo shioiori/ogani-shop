@@ -152,3 +152,6 @@ F:\Backend Devmaster\AppManager\AppManager\bin\Debug\netcoreapp3.1\AppManager.dl
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Account\SignUp.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Report\Index.cshtml.g.cs
 F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Home\ListOrder.cshtml.g.cs
+F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Product\AddDiscount.cshtml.g.cs
+F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\Account\UserProfile.cshtml.g.cs
+F:\Backend Devmaster\AppManager\AppManager\obj\Debug\netcoreapp3.1\Razor\Areas\Admin\Views\User\ListUser.cshtml.g.cs

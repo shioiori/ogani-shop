@@ -153,7 +153,16 @@
                             </ul>
                             <div class="checkout__order__subtotal">Subtotal <span>$@total.ToString("0.00")</span></div>
                             <div class="checkout__order__total">Total <span>$@total.ToString("0.00")</span></div>
-                            <button type="submit" class="site-btn">PLACE ORDER</button>
+                            @{
+                                if (Model.Count == 0)
+                                {
+                                       <button type="submit" class="site-btn" disabled>PLACE ORDER</button>    
+                                }
+                                else
+                                {
+                                    <button type="submit" class="site-btn">PLACE ORDER</button>
+                                }
+                            }
                         </div>
                     </div>
                     <div class="col-lg-8 col-md-6" id="address-form" style="display: none">
@@ -347,5 +356,9 @@
                 $("#addressid").val($(this).attr('id'));
             })
         })
+
+        $('.site-btn').on('click', function(){
+            alert("Bạn đã đặt hàng thành công!");
+        });
     </script>
 }

@@ -359,5 +359,94 @@ namespace AppManager.Controllers
             return Redirect($"/Admin/Product/AddImage?id={productImage.ProductId}");
         }
 
+        [HttpGet]
+        public IActionResult AddDiscount(int productId, int id = 0)
+        {
+            // type = 1 %, 0 $
+            if (id == 0)
+            {
+                return View(new DiscountEntity(){
+                    Id = id,
+                    ProductId = productId,
+                });
+            }
+            else
+            {
+                var query = _dbContext.DiscountEntities.Where(x => x.Id == id)
+                                                        .Select(x => new DiscountEntity()
+                                                        {
+                                                            Id = x.Id,
+                                                            ProductId = x.ProductId,
+                                                            DiscountType = x.DiscountType,
+                                                            DiscountValue = x.DiscountValue,
+                                                            StartDate = x.StartDate,
+                                                            EndDate = x.EndDate,
+                                                        }).First();
+                return View(query);
+            }
+        }
+
+        public string GetAccount()
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var account = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return account;
+        }
+
+        [HttpPost]
+        public IActionResult AddDiscount(DiscountModel discount)
+        {
+            if (discount.Id == 0)
+            {
+                var e = new DiscountEntity()
+                {
+                    ProductId = discount.ProductId,
+                    DiscountType = discount.DiscountType,
+                    DiscountValue = discount.DiscountValue,
+                    StartDate = discount.StartDate,
+                    EndDate = discount.EndDate,
+                    CreatedBy = GetAccount(),
+                    CreatedDate = DateTime.Now,
+                    UpdatedBy = GetAccount(),
+                    UpdatedDate = DateTime.Now
+                };
+                _dbContext.Add(e);
+            }
+            else
+            {
+                var entity = new DiscountEntity()
+                {
+                    Id = discount.Id,
+                    ProductId = discount.ProductId,
+                    DiscountType = discount.DiscountType,
+                    DiscountValue = discount.DiscountValue,
+                    StartDate = discount.StartDate,
+                    EndDate = discount.EndDate,
+                    CreatedBy = GetAccount(),
+                    CreatedDate = DateTime.Now,
+                    UpdatedBy = GetAccount(),
+                    UpdatedDate = DateTime.Now
+                };
+                _dbContext.DiscountEntities.Update(entity);
+            }
+            _dbContext.SaveChanges();
+            return Redirect("/Admin/Product/AddDiscount?productId=" + discount.ProductId);
+        }
+
+        [HttpGet]
+        public IActionResult ListDiscount(int productId)
+        {
+            var query = _dbContext.DiscountEntities.Where(x => x.ProductId == productId)
+                                                    .Select(x => new DiscountModel()
+                                                    {
+                                                        Id = x.Id,
+                                                        ProductId = x.ProductId,
+                                                        DiscountType = x.DiscountType,
+                                                        DiscountValue = x.DiscountValue,
+                                                        StartDate = x.StartDate,
+                                                        EndDate = x.EndDate,
+                                                    });
+            return query.Any() ? Json(query.ToList()) : Json("");
+        }
     }
 }

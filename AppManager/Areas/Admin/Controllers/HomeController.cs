@@ -62,8 +62,8 @@ namespace AppManager.Areas.Admin.Controllers
             ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;
-            var listCategory = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
-            return View(query);
+            var listOrder = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            return View(listOrder);
         }
     }
 }

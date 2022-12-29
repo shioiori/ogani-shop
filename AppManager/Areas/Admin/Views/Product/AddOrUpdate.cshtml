@@ -74,11 +74,11 @@
                                         {
                                             if (Model.CategoryId == item.Id)
                                             {
-                                                <option id="@item.Id" selected>@item.Name</option>
+                                                <option value="@item.Id" selected>@item.Name</option>
                                             }
                                             else
                                             {
-                                                <option id="@item.Id">@item.Name</option>                            
+                                                <option value="@item.Id">@item.Name</option>                            
                                             }
                                         }
                                     }
@@ -136,8 +136,7 @@
 @section Scripts{
     <script>
         $('#category').on('change', function(){
-            $('#cate').val($("#category :selected").attr("id"));
-            console.log($("#cate").val());
+            $('#cate').val($("#category").val());
         });
         $(document).on('change', 'input[name="fileUpload"]', function() {
             let files = $(this).prop("files");

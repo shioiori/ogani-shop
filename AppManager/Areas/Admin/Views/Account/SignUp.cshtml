@@ -142,14 +142,9 @@
 
                 },
                 success: res => {
-                    if (res.status == 'success'){
-                        $('#image-upload').attr('src', res.fileInfo.filePath);
-                        $('#image-file-path').val(res.fileInfo.filePath);
-                        $('#image-file-id').val(res.fileInfo.id);
-                    }
-                    else {
-                        alert("Error!");
-                    }
+                    $('#image-upload').attr('src', res.filePath);
+                    $('#image-file-path').val(res.filePath);
+                    $('#image-file-id').val(res.id);
                 },
                 error: error => {
                     console.log(error);

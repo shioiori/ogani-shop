@@ -1,0 +1,171 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Profile";
+    string role = Model.Role[0].ToString().ToUpper() + Model.Role.Substring(1);
+}
+<!-- Content Header (Page header) -->
+<section class="content-header">
+    <h1>
+    User Profile
+    </h1>
+    <ol class="breadcrumb">
+    <li><a href="/Admin/Index"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">User profile</li>
+    </ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-md-3">
+            <!-- Profile Image -->
+            <div class="box box-primary">
+            <div class="box-body box-profile">
+                <img class="profile-user-img img-responsive img-circle" src="@Model.AvatarPath" id="image-avatar" alt="User profile picture" style="width:100px; height:100px">
+
+                <h3 class="profile-username text-center">@Model.FirstName @Model.LastName</h3>
+
+                <p class="text-muted text-center">@role</p>
+                <button class="btn btn-primary btn-block" id="change-avatar"><b>Thay đổi avatar</b></button>
+                <input type="file" name="fileUpload" id="exampleInputFile" style="display:none;">
+            </div>
+            <!-- /.box-body -->
+            </div>
+        </div>
+        <!-- /.col -->
+        <div class="col-md-9">
+            <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#settings" data-toggle="tab">Setting</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="settings">
+                <form class="form-horizontal" method="post" action="/Admin/Account/UserProfile">
+                    <input type="text" name="account" value="@Model.Account" hidden />
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Họ</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="firstname" class="form-control" placeholder="Name" value="@Model.FirstName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputEmail" class="col-sm-2 control-label">Tên</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="lastname" value="@Model.LastName">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputName" class="col-sm-2 control-label">Số điện thoại</label>
+
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" name="phone" placeholder="Tel" value="@Model.Phone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputExperience" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" name="email" placeholder="Email" value="@Model.Email">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" class="col-md-2 control-label">Chức vụ</label>
+                        <div class="col-md-10">
+                            <input type="text" name="role" id="acc-role" value="@Model.Role" hidden />
+                            <select id="select-role" class="form-control select2" style="width: 100%;">
+                                <option value="admin">Admin</option>
+                                <option value="staff">Nhân viên</option>
+                                <option value="collaborator">Cộng tác viên</option>
+                                <option value="customer">Khách hàng</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-danger" id="edit-pro5">Chỉnh sửa</button>
+                        </div>
+                    </div>
+                </form>
+                </div>
+                <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+            </div>
+            <!-- /.nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+<!-- /.content -->
+
+@section Scripts{
+    <script>
+        $('#edit-pro5').on('click', function(){
+            alert("Chỉnh sửa thông tin cá nhân thành công!");
+        });
+
+        let oldAvatarId = @Html.Raw(Model.AvatarId);
+        console.log(oldAvatarId)
+        $('#change-avatar').on('click',  function() {
+            $('input[name="fileUpload"]').trigger('click');
+        });
+            
+        $(document).on('change', 'input[name="fileUpload"]', function() {
+            let files = $(this).prop("files");
+            let formData = new FormData();
+            formData.append("file", files[0]);
+            $.ajax({
+                url: "/admin/account/uploadfile",
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    $('#image-avatar').attr('src', res.filePath);
+                    console.log(res);
+                    UpdateAvatarImage(oldAvatarId, res.id)
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        });
+
+        function UpdateAvatarImage(oldId, newId){
+            $.ajax({
+                url: "/Admin/Account/UpdateAvatar?account=" + '@Model.Account' + "&&oldId=" + oldId + "&&newId=" + newId,
+                type: "get",
+                contentType: false,
+                processData: false,
+                beforeSend: () => {
+
+                },
+                success: res => {
+                    console.log("success");
+                    location.reload();
+                },
+                error: error => {
+                    console.log(error);
+                }
+            })
+        }
+
+        const value = document.cookie;
+        const parts = value.split('=');
+        $("#select-role").val("@Model.Role");
+        if (parts[1] != '@Model.Account' && parts[1] != 'admin'){
+            $("form :input").prop('readonly', true);
+            $("#edit-pro5").prop('disabled', true);
+            $("#change-avatar").prop('disabled', true);
+            $("#select-role").prop('disabled', true);
+        }
+
+        $('#select-role').on('change', function(){
+            let role = $("#select-role").val();
+            $('#acc-role').val(role);
+        });
+    </script>
+}

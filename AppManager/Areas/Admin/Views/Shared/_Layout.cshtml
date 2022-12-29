@@ -43,7 +43,7 @@
 
         <header class="main-header">
             <!-- Logo -->
-            <a href="index2.html" class="logo">
+            <a href="/Admin/Home/Index" class="logo">
                 <!-- mini logo for sidebar mini 50x50 pixels -->
                 <span class="logo-mini"><b>A</b>LT</span>
                 <!-- logo for regular state and mobile devices -->
@@ -313,11 +313,6 @@
                         <li><a href="/Admin/Category/AddOrUpdate"><i class="fa fa-circle-o"></i>Quản lý danh mục</a></li>
                       </ul>
                   </li>
-                  <li>
-                    <a href="/Admin/ShopOrder/ListOrder">
-                      <i class="fa fa-map-o"></i> <span>Đơn hàng</span>
-                    </a>
-                  </li>
                   <li class="treeview">
                       <a href="#">
                           <i class="fa fa-table"></i> <span>Blog</span><i class="fa fa-angle-left pull-right"></i>
@@ -328,16 +323,10 @@
                             <li><a href="/Admin/Blog/AddOrUpdate"><i class="fa fa-circle-o"></i>Tạo bài viết mới</a></li>
                       </ul>
                   </li>
-                  <li class="treeview">
-                    <a href="#">
-                      <i class="fa fa-files-o"></i>
-                      <span>Người dùng</span><i class="fa fa-angle-left pull-right"></i>
+                  <li>
+                    <a href="/Admin/User/ListUser">
+                      <i class="fa fa-file-o"></i> <span>Người dùng</span>
                     </a>
-                    <ul class="treeview-menu">
-                      <li><a href="#"><i class="fa fa-circle-o"></i>Nhân viên</a></li>
-                      <li><a href="#"><i class="fa fa-circle-o"></i>Khách hàng</a></li>
-                      <li><a href="#"><i class="fa fa-circle-o"></i>Quản lý tài khoản</a></li>
-                    </ul>
                   </li>
                   <li>
                     <a href="/Admin/Report/Index">
@@ -438,7 +427,7 @@
                                     <!-- Menu Footer-->
                                     <li class="user-footer">
                                         <div class="pull-left">
-                                            <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                            <a href="/Admin/Account/UserProfile" class="btn btn-default btn-flat">Profile</a>
                                         </div>
                                         <div class="pull-right">
                                             <a href="/admin/account/signout" class="btn btn-default btn-flat">Sign out</a>
@@ -448,11 +437,13 @@
                     $('#user-dropdownbar').append(row);
 
                     let row2 = `<div class="pull-left image">
-                                    <img src="${data.avatarPath}" class="img-circle" alt="User Image">
+                                    <a href="/Admin/Account/UserProfile">
+                                        <img src="${data.avatarPath}" class="img-circle" alt="User Image" style="width:50px; height:50px">
+                                    </a>
                                 </div>
                                 <div class="pull-left info">
                                     <p>${data.firstName} ${data.lastName}</p>
-                                    <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                                    <i class="fa fa-circle text-success"></i> Online
                                 </div>`;
                     $('#user-sidebar').append(row2);
                 }

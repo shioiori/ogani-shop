@@ -11,6 +11,7 @@ using AppManager.Entities;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
+using AppManager.Areas.Admin.Static_Function;
 
 namespace AppManager.Areas.Admin.Controllers
 {
@@ -24,6 +25,13 @@ namespace AppManager.Areas.Admin.Controllers
         {
             _dbContext = dbContext;
             _environment = environment;
+        }
+
+        public string GetAccount()
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var account = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return account;
         }
 
         [HttpGet]
@@ -399,6 +407,22 @@ namespace AppManager.Areas.Admin.Controllers
             _dbContext.PostEntities.Update(entity);
             _dbContext.SaveChanges();
             return Redirect("/Admin/Blog/Index");
+        }
+
+        public IActionResult AddCategoryBlog(string name)
+        {
+            _dbContext.CategoryBlogEntities.Add(new CategoryBlogEntity()
+            {
+                Name = name,
+                Slug = Slugify.GenerateSlug(name),
+                PostQuantity = 0,
+                CreatedDate = DateTime.Now,
+                CreatedBy = GetAccount(),
+                UpdatedDate = DateTime.Now,
+                UpdatedBy = GetAccount(),
+            });
+            _dbContext.SaveChanges();
+            return Json("ok!");
         }
     }
 }

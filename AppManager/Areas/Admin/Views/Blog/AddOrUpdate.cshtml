@@ -177,12 +177,13 @@
             success: function(data){
                 console.log(data);
                 data.forEach(function(item,index){
-                    let html = `<option id="${item.id}">${item.name}</option>`;
+                    let html = `<option value="${item.id}">${item.name}</option>`;
                     if (item.id == "@categoryId"){
-                        html = `<option id="${item.id}" selected>${item.name}</option>`;
+                        html = `<option value="${item.id}" selected>${item.name}</option>`;
                     }
-                    $('#category-blog').append(html);  
-                });          
+                    $('#category-blog').append(html);      
+                });    
+                $("#category-blog").val("@categoryId");      
             },
             error: function(){
                 console.log("error!");
@@ -191,8 +192,7 @@
         });
 
         $('#category-blog').on('change', function(){
-            $('#category-id').val($("#category-blog :selected").attr("id"));
-            console.log($("#category-id").val());
+            $('#category-id').val($("#category-blog").val());
         });
         
         //$(document).ready(function (){

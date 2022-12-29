@@ -28,6 +28,92 @@ namespace AppAccountManager.Areas.Admin.Controllers
             _environment = environment;
         }
 
+        public string GetAccount()
+        {
+            var claims = HttpContext.User.Identity as ClaimsIdentity;
+            var account = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
+            return account;
+        }
+
+        public IActionResult UserProfile(string account)
+        {
+            var acc = string.IsNullOrEmpty(account) ? GetAccount() : account;
+            var user = (from a in _dbContext.UserEntities
+                       join b in _dbContext.AccountImageEntities on a.Account equals b.Account
+                       join c in _dbContext.FileManageEntities on b.FileId equals c.Id
+                       join d in _dbContext.AccountManagerEntities on a.Account equals d.Account
+                       where b.IsDeleted == false && b.IsAvatar == true
+                       where a.Account == acc
+                       select new UserModel
+                       {
+                           Account = acc,
+                           FirstName = a.FirstName,
+                           LastName = a.LastName,
+                           Phone = a.Phone,
+                           Email = a.Email,
+                           AvatarId = c.Id,
+                           AvatarPath = c.FilePath,
+                           Role = d.Role,
+                       }).First();
+            return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult UpdateAvatar(string account, int oldId, int newId)
+        {
+            var oldImage = _dbContext.AccountImageEntities.First(x => x.FileId == oldId);
+            oldImage.IsAvatar = false;
+            _dbContext.AccountImageEntities.Update(oldImage);
+            var newImage = new AccountImageEntity()
+            {
+                Account = account,
+                FileId = newId,
+                IsAvatar = true,
+                CreatedDate = DateTime.Now,
+                UpdatedDate = DateTime.Now,
+                CreatedBy = account,
+                UpdatedBy = account,
+            };
+            _dbContext.AccountImageEntities.Add(newImage);
+            _dbContext.SaveChanges();
+            return Redirect("/Admin/Account/UserProfile");
+        }
+
+        [HttpPost]
+        public IActionResult UserProfile(UserModel model)
+        {
+            var account = _dbContext.AccountManagerEntities.Where(x => x.Account == model.Account)
+                                                            .Select(x => new AccountManagerEntity()
+                                                            {
+                                                                Account = x.Account,
+                                                                Password = x.Password,
+                                                                Role = x.Role,
+                                                                CreatedDate = x.CreatedDate,
+                                                                UpdatedDate = x.UpdatedDate,
+                                                            }).First();
+            account.Role = model.Role;
+            account.UpdatedDate = DateTime.Now;
+            account.UpdatedBy = model.Account;
+            _dbContext.AccountManagerEntities.Update(account);
+            var entity = _dbContext.UserEntities.Where(x => x.Account == model.Account)
+                                                .Select(x => new UserEntity()
+                                                {
+                                                    CreatedDate = x.CreatedDate,
+                                                }).First();
+            entity.Account = model.Account;
+            entity.FirstName = model.FirstName;
+            entity.LastName = model.LastName;
+            entity.Phone = model.Phone;
+            entity.Email = model.Email;
+            entity.UpdatedDate = DateTime.Now;
+            entity.UpdatedBy = GetAccount();
+            
+            _dbContext.UserEntities.Update(entity);
+            _dbContext.SaveChanges();
+            return UserProfile(model.Account);
+        }
+
+
         public IActionResult Login(string ReturnUrl)
         {
             var cl = HttpContext.User.Identity as ClaimsIdentity;
@@ -188,14 +274,9 @@ namespace AppAccountManager.Areas.Admin.Controllers
             var model = new FileModel()
             {
                 Id = fileEntity.Id,
-                Name = fileEntity.Name,
                 FilePath = fileEntity.FilePath
             };
-            return Json(new
-            {
-                status = "success",
-                fileInfo = model
-            });
+            return Json(model);
         }
 
     }

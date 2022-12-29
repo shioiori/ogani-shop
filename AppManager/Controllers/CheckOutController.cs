@@ -49,7 +49,7 @@ namespace AppManager.Controllers
             }
             var account = HttpContext.Request.Cookies["account"];
             int addressId = location.Id;
-            // nếu xài địa chỉ có sẵn
+            // nếu k xài địa chỉ có sẵn
             if (addressId == 0)
             {
                 // thêm địa chỉ vào address

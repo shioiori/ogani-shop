@@ -306,6 +306,7 @@
             dataType: "json",
             success: function(data){
                 data.forEach(function(item,index){
+                    let date = new Intl.DateTimeFormat('en-GB', { dateStyle: 'full'}).format(new Date(Date.parse(item.createdDate)));
                     let row = ` <div class="col-lg-4 col-md-4 col-sm-6">
                                     <div class="blog__item">
                                         <div class="blog__item__pic">
@@ -313,11 +314,11 @@
                                         </div>
                                         <div class="blog__item__text">
                                             <ul>
-                                                <li><i class="fa fa-calendar-o"></i>${item.createdDate}</li>
+                                                <li><i class="fa fa-calendar-o"></i>${date}</li>
                                                 <li><i class="fa fa-comment-o"></i> 5</li>
                                             </ul>
                                             <h5><a href="/BlogDetail/Post?id=${item.id}">${item.title}</a></h5>
-                                            <p>${item.description}</p>
+                                            <p>${item.description.substring(0,200)}</p>
                                         </div>
                                     </div>
                                 </div>`

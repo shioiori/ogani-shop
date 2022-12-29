@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Areas/Admin/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "User";
+
+    int pageCount = (int)ViewBag.pageCount;
+    int pageNumber = (int)ViewBag.pageNumber;
+    int pageSize = (int)ViewBag.pageSize;
+    int stt = pageSize * pageNumber - (pageSize - 1);
+    string name = ViewBag.name;
+    string role = ViewBag.role;
+}
+
+<section class="content-header">
+<h1>
+    &nbsp;
+</h1>
+<ol class="breadcrumb">
+    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+    <li class="active">Người dùng</li>
+</ol>
+</section>
+
+<!-- Main content -->
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box">
+                <div class="box-header">
+                <h3 class="box-title">Danh sách sản phẩm</h3>
+                <div class="btn-group">
+                  <button type="button" class="btn btn-info">Lọc theo</button>
+                  <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle Dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    <li><a href="/Admin/User/ListUser?role=admin">Admin</a></li>
+                    <li><a href="/Admin/User/ListUser?role=staff">Nhân viên</a></li>
+                    <li><a href="/Admin/User/ListUser?role=collaborator">Cộng tác viên</a></li>
+                    <li><a href="/Admin/User/ListUser?role=customer">Khách hàng</a></li>
+                  </ul>
+                </div>
+                <div class="box-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                        <input type="text" name="name" class="form-control pull-right" id="input-search" placeholder="Search" value="@name">
+                        <div class="input-group-btn">
+                            <a href="###"><button class="btn btn-default" id="form-search"><i class="fa fa-search"></i></button></a>
+                        </div>
+                        <input type="number" name="pageNumber" id="txtPageNumber" value="1" hidden/>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                               <th>STT</th>
+                               <th>Ảnh đại diện</th>
+                               <th>Họ và tên</th>
+                               <th>Chức vụ</th>
+                               <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                foreach (var item in Model)
+                                {    
+                                     var r = item.Role[0].ToString().ToUpper() + item.Role.Substring(1);
+                                     <tr>
+                                        <td>@stt</td>
+                                        <td><img src="@item.AvatarPath" style="width:128px; height:128px"></td>
+                                        <td>@item.FirstName @item.LastName</td>
+                                        <td>@r</td>
+                                        <td>
+                                            <a href="/Admin/Account/UserProfile?account=@item.Account" class="btn btn-default btn-warning" style="color: white">Chi tiết</a>
+                                            <a href="/Admin/Account/Delete" class="btn btn-default btn-danger" style="color: white">Xóa</a>
+                                        </td>
+                                    </tr>
+                                    stt++;
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer clearfix">
+                    <ul class="pagination pagination-sm no-margin pull-right">
+                        <li><a href="/Admin/User/ListUser?name=@name&&role=@role&&pageNumber=@Math.Max(pageNumber-1,1)">&laquo;</a></li>
+                        @for (int i = 1; i <= pageCount; ++i)
+                        {
+                            <li><a href="/Admin/User/ListUser?name=@name&&role=@role&&pageNumber=@i">@i</a></li>
+                        }
+                        <li><a href="/Admin/User/ListUser?name=@name&&role=@role&&pageNumber=@Math.Min(pageNumber+1,pageCount)">&raquo;</a></li>
+                    </ul>
+                </div>
+            </div>
+        <!-- /.box -->
+        </div>
+    </div>
+</section>
+
+@section Scripts{
+    <script>
+        $('#form-search').on('click', function(){
+            const urlParams = new URLSearchParams(window.location.search);
+            const role = urlParams.get('role');
+            const pageNumber = urlParams.get('pageNumber');
+            let link = "/Admin/User/ListUser?name=" + $('#input-search').val() + "&&role=" + role + "&&pageNumber=" + pageNumber;
+            $("a[href='###']").attr('href', link);
+            $('#form-search')[0].click();
+        })
+    </script>
+}

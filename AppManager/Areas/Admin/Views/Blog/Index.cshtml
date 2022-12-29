@@ -34,20 +34,17 @@
                 </div>
                 <div class="box-body no-padding">
                     <ul class="nav nav-pills nav-stacked" id="blog-category">
-                        <li><a href="#"><i class="fa fa-folder-o"></i> Văn hoá - xã hội
-                            <span><i class="fa fa-angle-left pull-right"></i></span></a></li>
-                        <li><a href="#"><i class="fa fa-folder-o"></i> Khoa học
-                            <span><i class="fa fa-angle-left pull-right"></i></span></a></li>
-                        <li><a href="#"><i class="fa fa-folder-o"></i> Công nghệ thông tin
-                                <span><i class="fa fa-angle-left pull-right"></i></span></a></li>
-                        <li><a href="#"><i class="fa fa-folder-o"></i> Bất động sản
-                            <span><i class="fa fa-angle-left pull-right"></i></span></a></li>
-                        <li><a href="#"><i class="fa fa-folder-o"></i> Kinh doanh
-                            <span><i class="fa fa-angle-left pull-right"></i></span></a></li>
+                       <li>
+                            <div class="input-group input-group-sm" style="padding: 1rem;">
+                                    <input type="text" class="form-control" id="cblog-name">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-info btn-flat" id="add-folder">Thêm</button>
+                                    </span>
+                                </div>
+                        </li>
                     </ul>
                 </div>
             <!-- /.box-body -->
-       
             </div>
         </div>
        <div class="col-md-9">
@@ -128,12 +125,10 @@
             dataType: "json",
             beforeSend: function(){},
             success: function(data){
-                $('#blog-category').html('');
                 data.forEach(function (item,index){
                     let row = `<li><a href="/Admin/Blog/Index?arg=${item.id}"><i class="fa fa-folder-o"></i>${item.name}</a></li>`;
-                    $('#blog-category').append(row);
-                })
-                console.log( $('#blog-category').html())
+                    $('#blog-category').prepend(row);
+                });
             },
             error: function(){},
             complete: function(){}
@@ -143,6 +138,21 @@
             let link = "/Admin/Blog/Index?name=" + $('#input-search').val();
             $("a[href='###']").attr('href', link);
             $('#form-search')[0].click();
+        });
+
+        $('#add-folder').click(function(){
+            console.log(1);
+            $.ajax({
+                url: "/Admin/Blog/AddCategoryBlog?name=" + $('#cblog-name').val(),
+                type: "GET",
+                dataType: "json",
+                beforeSend: function(){},
+                success: function(data){
+                    location.reload();
+                },
+                error: function(){},
+                complete: function(){}
+            });
         })
     </script>
 }
