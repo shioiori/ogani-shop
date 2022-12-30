@@ -2,6 +2,7 @@
 Đây là project mua sắm nguyên liệu và thực phẩm. 
 
 Frontend được lấy từ: https://themewagon.com/themes/free-bootstrap-4-html5-responsive-ecommerce-website-template-ogani/
+
 Frontend admin được lấy từ: https://adminlte.io/themes/AdminLTE/index2.html
 
 ## Chức năng hiện có
