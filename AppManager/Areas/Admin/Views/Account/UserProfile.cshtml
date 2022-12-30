@@ -162,6 +162,9 @@
             $("#change-avatar").prop('disabled', true);
             $("#select-role").prop('disabled', true);
         }
+        if (parts[1] != 'admin'){
+            $("#select-role").prop('disabled', true);
+        }
 
         $('#select-role').on('change', function(){
             let role = $("#select-role").val();

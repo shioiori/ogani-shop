@@ -4,59 +4,10 @@
     int pageNumber = (int)ViewBag.pageNumber;
     int pageSize = (int)ViewBag.pageSize;
     int stt = pageSize * pageNumber - (pageSize - 1);
-    string name = ViewBag.name;
+    int category = ViewBag.category;
+    int minPrice = ViewBag.minprice;
+    int maxPrice = ViewBag.maxprice;
 }
-<section class="hero hero-normal">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-3">
-                <div class="hero__categories">
-                    <div class="hero__categories__all">
-                        <i class="fa fa-bars"></i>
-                        <span>All departments</span>
-                    </div>
-                    <ul id="department2">
-                        <li><a href="#">Fresh Meat</a></li>
-                        <li><a href="#">Vegetables</a></li>
-                        <li><a href="#">Fruit &amp; Nut Gifts</a></li>
-                        <li><a href="#">Fresh Berries</a></li>
-                        <li><a href="#">Ocean Foods</a></li>
-                        <li><a href="#">Butter &amp; Eggs</a></li>
-                        <li><a href="#">Fastfood</a></li>
-                        <li><a href="#">Fresh Onion</a></li>
-                        <li><a href="#">Papayaya &amp; Crisps</a></li>
-                        <li><a href="#">Oatmeal</a></li>
-                        <li><a href="#">Fresh Bananas</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-lg-9">
-                <div class="hero__search">
-                    <div class="hero__search__form">
-                        <form action="#">
-                            <div class="hero__search__categories">
-                                All Categories
-                                <span class="arrow_carrot-down"></span>
-                            </div>
-                            <input type="text" placeholder="What do yo u need?">
-                            <button type="submit" class="site-btn">SEARCH</button>
-                        </form>
-                    </div>
-                    <div class="hero__search__phone">
-                        <div class="hero__search__phone__icon">
-                            <i class="fa fa-phone"></i>
-                        </div>
-                        <div class="hero__search__phone__text">
-                            <h5>+65 11.188.888</h5>
-                            <span>support 24/7 time</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
 <!-- Breadcrumb Section Begin -->
 <section class="breadcrumb-section set-bg" data-setbg="/img/breadcrumb.jpg">
     <div class="container">
@@ -82,24 +33,14 @@
                 <div class="sidebar">
                     <div class="sidebar__item">
                         <h4>Department</h4>
-                        <ul id="department">
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit & Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter & Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya & Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
+                        <ul id="depart">
                         </ul>
                     </div>
                     <div class="sidebar__item">
                         <h4>Price</h4>
                         <div class="price-range-wrap">
                             <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
-                                 data-min="10" data-max="540">
+                                 data-min="10" data-max="1000">
                                 <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
                                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
                                 <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
@@ -203,14 +144,14 @@
                     }
                 </div>
                 <div class="product__pagination">
-                    <a href="/ShoppingGrid/Index?pageNumber=@Math.Max(pageNumber-1,1)"><i class="fa fa-long-arrow-left"></i></a>
+                    <a href="/ShoppingGrid/Index?category=@category&&minprice=@minPrice&&maxPrice=@maxPrice&&pageNumber=@Math.Max(pageNumber-1,1)"><i class="fa fa-long-arrow-left"></i></a>
                     @{
                         for (int i = 1; i <= pageCount; ++i)
                         {
-                            <a href="/ShoppingGrid/Index?pageNumber=@i">@i</a>
+                            <a href="/ShoppingGrid/Index?category=@category&&minprice=@minPrice&&maxPrice=@maxPrice&&pageNumber=@i">@i</a>
                         }
                     }
-                    <a href="/ShoppingGrid/Index?pageNumber=@Math.Min(pageNumber+1,pageCount)"><i class="fa fa-long-arrow-right"></i></a>
+                    <a href="/ShoppingGrid/Index?category=@category&&minprice=@minPrice&&maxPrice=@maxPrice&&pageNumber=@Math.Min(pageNumber+1,pageCount)"><i class="fa fa-long-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -221,25 +162,8 @@
 
 @section Scripts{
     <script>
-        // category
-        $.ajax({
-            url: "/Home/GetAllCategories",
-            type: "GET",
-            dataType: "json",
-            beforeSend: function(){},
-            success: function(data){
-                $('#department2').html('');
-                $('#department2').append('<li><a href="/ShoppingGrid/Index" class="category">All</a></li>');
-                data.forEach(function (item,index){
-                    let row = `<li><a href="/ShoppingGrid/Index?id=${item.id}" class="category">${item.name}</a></li>`;
-                    $('#department2').append(row);
-                })
-            },
-            error: function(){},
-            complete: function(){}
-        });
 
-        // category
+         // category
         // jquery chỉ chạy với id, thay vì class nếu nó được thêm vào sau khi tải trang
 
         $.ajax({
@@ -248,11 +172,10 @@
             dataType: "json",
             beforeSend: function(){},
             success: function(data){
-                $('#department').html('');
-                $('#department').append('<li><a href="/ShoppingGrid/Index" class="category">All</a></li>');
+                $('#depart').append('<li><a href="/ShoppingGrid/Index" class="category">All</a></li>');
                 data.forEach(function (item,index){
-                    let row = `<li><a href="/ShoppingGrid/Index?id=${item.id}" class="category">${item.name}</a></li>`;
-                    $('#department').append(row);
+                    let row = `<li><a href="/ShoppingGrid/Index?category=${item.id}" class="category">${item.name}</a></li>`;
+                    $('#depart').append(row);
                 })
             },
             error: function(){},
@@ -281,60 +204,18 @@
             });
         });
 
-        // hàm xử lý khi xử dụng input range
-        function PriceRange(data){
-             $.ajax({
-                    url: "/ShoppingGrid/FilterProductByPrice",
-                    type: "GET",
-                    data: data,
-                    dataType: "json",
-                    beforeSend: function(){
-                    },
-                    success: function(data){
-                        $('#filter-item').html('');
-                        $('#product-count').html('');
-                        let c = data.count;
-                        $('#product-count').append(c);
-                        if (c > 0){
-                            let prd = data.listProduct;
-                            prd.forEach(function (item,index){
-                                let price = parseFloat(item.price).toFixed(2);
-                                let url = "/ProductDetail/Product?id=" + item.id;
-                                let row = `<div class="col-lg-4 col-md-6 col-sm-6">
-                                                <div class="product__item">
-                                                    <div class="product__item__pic set-bg" data-setbg="${item.avatar}" style="background-image: url(${item.avatar});">
-                                                        <ul class="product__item__pic__hover" id="${item.id}">
-                                                            <li><a href="#"><i class="fa fa-heart"></i></a></li>
-                                                            <li><a href="#"><i class="fa fa-retweet"></i></a></li>
-                                                            <li><a href="/ShoppingCart/AddItemToCart?id=${item.id}" class="add-to-cart"><i class="fa fa-shopping-cart"></i></a></li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="product__item__text">
-                                                        <h6><a href="${url}">${item.name}</a></h6>
-                                                        <h5>$${price}</h5>
-                                                    </div>
-                                                </div>
-                                            </div>`;
-                                $('#filter-item').append(row);
-                            });
-                         }
-                    },
-                    error: function(){},
-                    complete: function(){}
-                });
-        }
-
         // bắt trigger của input range
-        $('.ui-slider-handle').on("change mouseover", function() {
-            let min = $('#minamount').val();
+        $('.ui-slider-handle').on("change mouseover", async function() {
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await sleep(1000);
+            var url = "/ShoppingGrid/Index?pageNumber=";
+            var min = $('#minamount').val();
             min = min.substring(1,min.length);
-            let max = $('#maxamount').val();
+            var max = $('#maxamount').val();
             max = max.substring(1,max.length);
-            var data = {
-                MinPrice: min,
-                MaxPrice: max
-            }
-            PriceRange(data);
+            url = url + '@pageNumber' + "&&category=" + '@category' + "&&minprice=" + min + "&&maxprice=" + max;
+            window.location.href = url;
+            console.log(url);
         });
        
         $.ajax({
@@ -362,6 +243,28 @@
                 });
                 $('#latest-product').trigger('refresh.owl.carousel');
             }
-        })
+        });
+
+        $(document).ready(async function () {
+            const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+            await sleep(1000);
+            var rangeSlider = $(".price-range"),
+            minamount = $("#minamount"),
+            maxamount = $("#maxamount"),
+            minPrice = rangeSlider.data('min'),
+            maxPrice = rangeSlider.data('max');
+            rangeSlider.slider({
+                range: true,
+                min: minPrice,
+                max: maxPrice,
+                values: [@minPrice, @maxPrice],
+                slide: function (event, ui) {
+                    minamount.val('$' + ui.values[0]);
+                    maxamount.val('$' + ui.values[1]);
+                }
+            });
+            minamount.val('$' + rangeSlider.slider("values", 0));
+            maxamount.val('$' + rangeSlider.slider("values", 1));
+        });
     </script>
 }

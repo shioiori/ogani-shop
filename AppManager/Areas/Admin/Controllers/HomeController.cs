@@ -65,5 +65,25 @@ namespace AppManager.Areas.Admin.Controllers
             var listOrder = query.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
             return View(listOrder);
         }
+
+        public IActionResult GetNewUser()
+        {
+            var query = (from a in _dbContext.UserEntities
+                         join b in _dbContext.AccountManagerEntities on a.Account equals b.Account
+                         join c in _dbContext.AccountImageEntities on b.Account equals c.Account
+                         join d in _dbContext.FileManageEntities on c.FileId equals d.Id
+                         where c.IsAvatar == true && c.IsDeleted == false
+                         orderby a.CreatedDate
+                         select new UserModel()
+                         {
+                             Account = a.Account,
+                             Role = b.Role,
+                             FirstName = a.FirstName,
+                             LastName = a.LastName,
+                             AvatarId = d.Id,
+                             AvatarPath = d.FilePath,
+                         });
+            return Json(query.Take(8).ToList());
+        }
     }
 }

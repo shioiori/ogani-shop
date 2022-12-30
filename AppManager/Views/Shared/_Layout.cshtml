@@ -161,6 +161,52 @@
     </header>
     <!-- Header Section End -->
     <!-- Hero Section Begin -->
+    <section class="hero hero-normal">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="hero__categories">
+                    <div class="hero__categories__all">
+                        <i class="fa fa-bars"></i>
+                        <span>All departments</span>
+                    </div>
+                    <ul id="department">
+                        <li><a href="#">Fresh Meat</a></li>
+                        <li><a href="#">Vegetables</a></li>
+                        <li><a href="#">Fruit &amp; Nut Gifts</a></li>
+                        <li><a href="#">Fresh Berries</a></li>
+                        <li><a href="#">Ocean Foods</a></li>
+                        <li><a href="#">Butter &amp; Eggs</a></li>
+                        <li><a href="#">Fastfood</a></li>
+                        <li><a href="#">Fresh Onion</a></li>
+                        <li><a href="#">Papayaya &amp; Crisps</a></li>
+                        <li><a href="#">Oatmeal</a></li>
+                        <li><a href="#">Fresh Bananas</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="hero__search">
+                    <div class="hero__search__form">
+                        <form>
+                            <input type="text" id="find-bar" placeholder="What do you need?">
+                            <button id="search-prd" type="button" class="site-btn">SEARCH</button>
+                        </form>
+                    </div>
+                    <div class="hero__search__phone">
+                        <div class="hero__search__phone__icon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <div class="hero__search__phone__text">
+                            <h5>+65 11.188.888</h5>
+                            <span>support 24/7 time</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
     <!-- Hero Section End -->
     @RenderBody()
     <!-- Footer Section Begin -->
@@ -263,7 +309,30 @@
                                         </div>`);
                 }
             }
-        })
+        });
+
+        // category
+        $.ajax({
+            url: "/Home/GetAllCategories",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function(){},
+            success: function(data){
+                $('#department').html('');
+                $('#department').append('<li><a href="/ShoppingGrid/Index" class="category">All</a></li>');
+                data.forEach(function (item,index){
+                    let row = `<li><a href="/ShoppingGrid/Index?category=${item.id}" class="category">${item.name}</a></li>`;
+                    $('#department').append(row);
+                })
+            },
+            error: function(){},
+            complete: function(){}
+        });
+
+        $('#search-prd').on('click', function(){
+            let x = $('#find-bar').val();
+            window.location.href = "/ShoppingGrid/Index?name=" + x;
+        });
     </script>
     @RenderSection("Scripts", false)
 </body>

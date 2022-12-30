@@ -22,7 +22,8 @@ namespace AppManager.Controllers
             public int MaxPrice { get; set; }
         }
 
-        public IActionResult Index(int id, int pageNumber = 1)
+        [HttpGet]
+        public IActionResult Index(string name, int category, int minprice = -1, int maxprice = -1, int pageNumber = 1)
         {
             var discount = (from a in _dbContext.ProductEntities
                        join b in _dbContext.DiscountEntities on a.Id equals b.ProductId
@@ -32,7 +33,9 @@ namespace AppManager.Controllers
                        where a.IsDeleted == false
                        where c.IsAvatar == true && c.IsDeleted == false
                        where b.CreatedDate <= DateTime.Now && b.EndDate >= DateTime.Now
-                       where e.Id == id || id == 0
+                       where e.Id == category || category == 0
+                       where minprice == -1 || (a.Price >= minprice && a.Price <= maxprice)
+                       where string.IsNullOrEmpty(name) || a.Name.Contains(name.ToLower())
                        select new ProductDiscountModel()
                        {
                            Id = a.Id,
@@ -51,8 +54,10 @@ namespace AppManager.Controllers
                        join z in _dbContext.ProductEntities on x.ProductId equals z.Id
                        join w in _dbContext.CategoryEntities on z.CategoryId equals w.Id
                        where z.IsDeleted == false
-                       where w.Id == id || id == 0
+                       where w.Id == category || category == 0
                        where x.IsAvatar == true && x.IsDeleted == false
+                       where minprice == -1 || (z.Price >= minprice && z.Price <= maxprice)
+                       where string.IsNullOrEmpty(name) || z.Name.Contains(name.ToLower())
                        orderby z.Id ascending
                        select new ProductModel()
                        {
@@ -69,13 +74,24 @@ namespace AppManager.Controllers
                            CategoryId = z.CategoryId,
                            Avatar = y.FilePath,
                            AvatarFileId = y.Id
-                       });
+                       }).ToList();
+            var temp = new List<ProductModel>(prd);
+            foreach(var item in temp)
+            {
+                if (discount.Any(x => x.Id == item.Id))
+                {
+                    prd.Remove(item);
+                }
+            }
             int pageSize = 12;
             int total = prd.Count();
             ViewBag.pageCount = Math.Ceiling((decimal)total / pageSize);
             ViewBag.pageNumber = pageNumber;
             ViewBag.pageSize = pageSize;
-            var data = new ShoppingGrid()
+            ViewBag.category = category;
+            ViewBag.minprice = minprice;
+            ViewBag.maxprice = maxprice;
+            var data = new ShoppingGridModel()
             {
                 Discount = discount.Any() ? discount.Take(10).ToList() : new List<ProductDiscountModel>(),
                 Count = prd.Any() ? prd.Count() : 0,
@@ -84,7 +100,7 @@ namespace AppManager.Controllers
             return View(data);
         }
 
-        public class ShoppingGrid
+        public class ShoppingGridModel
         {
             public List<ProductDiscountModel> Discount { get; set; }
             public int Count { get; set; }
@@ -96,40 +112,6 @@ namespace AppManager.Controllers
         {
             var categories = _dbContext.CategoryEntities;
             return categories.Any() ? Json(categories.ToList()) : Json("");
-        }
-
-        [HttpGet]
-        public IActionResult FilterProductByPrice(PriceRange priceRange)
-        {
-            var prd = (from x in _dbContext.ProductImageEntities
-                       join y in _dbContext.FileManageEntities on x.FileId equals y.Id
-                       join z in _dbContext.ProductEntities on x.ProductId equals z.Id
-                       where z.IsDeleted == false
-                       where z.Price >= priceRange.MinPrice && z.Price <= priceRange.MaxPrice
-                       where x.IsAvatar == true && x.IsDeleted == false
-                       orderby z.Id ascending
-                       select new ProductModel()
-                       {
-                           Id = z.Id,
-                           Name = z.Name,
-                           Slug = z.Slug,
-                           Price = z.Price,
-                           OldPrice = z.OldPrice,
-                           Description = z.Description,
-                           Summary = z.Summary,
-                           Quantity = z.Quantity,
-                           Weight = z.Weight,
-                           Unit = z.Unit,
-                           CategoryId = z.CategoryId,
-                           Avatar = y.FilePath,
-                           AvatarFileId = y.Id
-                       });
-            var data = new
-            {
-                Count = prd.Any() ? prd.Count() : 0,
-                ListProduct = prd.Any() ? prd.ToList() : new List<ProductModel>(),
-            };
-            return Json(data);
         }
     }
 }

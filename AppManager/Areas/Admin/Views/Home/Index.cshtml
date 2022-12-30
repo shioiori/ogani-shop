@@ -171,7 +171,7 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body no-padding">
-                  <ul class="users-list clearfix">
+                  <ul class="users-list clearfix" id="users-list">
                     <li>
                       <img src="dist/img/user1-128x128.jpg" alt="User Image">
                       <a class="users-list-name" href="#">Alexander Pierce</a>
@@ -386,5 +386,23 @@
             },
             complete: function(){}
         });
+
+        $.ajax({
+            url: "/Admin/Home/GetNewUser",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function(){},
+            success: function(data){
+                $('#users-list').html('');
+                data.forEach(function(item,index){
+                    console.log(data);
+                    $('#users-list').append(`<li>
+                                              <img src="${item.avatarPath}" style="width: 106px; height:106px" alt="User Image">
+                                              <a class="users-list-name" href="/Admin/Account/UserProfile?account=${item.account}">${item.firstName} ${item.lastName}</a>
+                                              <span class="users-list-date">${item.role.charAt(0).toUpperCase() + item.role.slice(1)}</span>
+                                            </li>`);
+                })
+            }
+        })
     </script>
 }
