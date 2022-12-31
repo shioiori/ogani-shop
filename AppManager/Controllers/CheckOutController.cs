@@ -152,23 +152,7 @@ namespace AppManager.Controllers
             {
                 var claims = HttpContext.User.Identity as ClaimsIdentity;
                 var accClaims = claims.FindFirst(ClaimTypes.NameIdentifier).Value;
-                var query = _dbContext.ShippingAddressEntities.Where(x => x.Account == accClaims)
-                                                          .Select(x => new ShippingAddressEntity()
-                                                          {
-                                                              Id = x.Id,
-                                                              Account = accClaims,
-                                                              FirstName = x.FirstName,
-                                                              LastName = x.LastName,
-                                                              Address = x.Address,
-                                                              City = x.City,
-                                                              Country = x.Country,
-                                                              Phone = x.Phone,
-                                                              Postcode = x.Postcode,
-                                                              CreatedDate = DateTime.Now,
-                                                              UpdatedDate = DateTime.Now,
-                                                              CreatedBy = x.CreatedBy,
-                                                              UpdatedBy = x.UpdatedBy
-                                                          });
+                var query = _dbContext.ShippingAddressEntities.Where(x => x.Account == accClaims);
                 return query.Any() ? Json(query.ToList()) : Json("");
             }
             catch (Exception ex)

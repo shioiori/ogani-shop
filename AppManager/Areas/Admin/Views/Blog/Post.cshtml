@@ -47,7 +47,7 @@
             <div class="box-body no-padding">
               <div class="mailbox-read-info">
                 <h3>@Model.Title
-                    <span class="mailbox-read-time pull-right">
+                    <span class="mailbox-read-time pull-right" id="blog-edited">
                             <a href="/Admin/Blog/AddOrUpdate?id=@Model.Id">
                                 <i class="fa fa-edit"></i>&nbsp;Edit 
                             </a>
@@ -99,3 +99,13 @@
     </div>
     <!-- /.row -->
 </section>
+
+@section Scripts{
+    <script>
+        const value = document.cookie;
+        const parts = value.split('=');
+        if (parts[1] != '@Model.Account' && parts[1] != 'admin'){
+            $("#blog-edited").html('');
+        }
+    </script>
+}

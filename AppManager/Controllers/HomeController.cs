@@ -34,13 +34,7 @@ namespace AppManager.Controllers
             {
                 return Json("");
             }
-            var user = _dbContext.UserEntities.Where(x => x.Account == account)
-                                                .Select(x => new UserModel()
-                                                {
-                                                    Account = x.Account,
-                                                    FirstName = x.FirstName,
-                                                    LastName = x.LastName
-                                                }).First();
+            var user = _dbContext.UserEntities.First(x => x.Account == account);
             string username = user.FirstName + " " + user.LastName;
             return Json(username);
         }
@@ -192,7 +186,7 @@ namespace AppManager.Controllers
             var latestProducts = (from b1 in _dbContext.ProductEntities
                                   join b2 in _dbContext.ProductImageEntities on b1.Id equals b2.ProductId
                                   join b3 in _dbContext.FileManageEntities on b2.FileId equals b3.Id
-                                  where !b1.IsDeleted && b2.IsAvatar && !b2.IsDeleted
+                                  where !(bool)b1.IsDeleted && (bool)b2.IsAvatar && !(bool)b2.IsDeleted
                                   orderby b1.CreatedDate descending
                                   select new ProductModel()
                                   {

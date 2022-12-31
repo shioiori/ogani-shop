@@ -134,19 +134,8 @@ namespace AppManager.Areas.Admin.Controllers
             }
             _dbContext.SaveChanges();
             model.Id = entity.Id;
-            // thêm ảnh đại diện ?? select x=>x k dc nhưng select new thì dc
-            var img = _dbContext.PostImageEntities.Where(x => x.PostId == model.Id && x.IsAvatar == true)
-                                                  .Select(x => new PostImageEntity()
-                                                  {
-                                                      Id = x.Id,
-                                                      PostId = x.PostId,
-                                                      FileId = x.FileId,
-                                                      IsAvatar = x.IsAvatar,
-                                                      CreatedDate = x.CreatedDate,
-                                                      UpdatedDate = x.UpdatedDate,
-                                                      CreatedBy = x.CreatedBy,
-                                                      UpdatedBy = x.UpdatedBy,
-                                                  }).ToList();
+            // thêm ảnh đại diện 
+            var img = _dbContext.PostImageEntities.Where(x => x.PostId == model.Id && x.IsAvatar == true);
             // xoá avatar cũ
             if (img.Any())
             {
@@ -213,9 +202,7 @@ namespace AppManager.Areas.Admin.Controllers
             {
                 if (!tags.Contains(item.Name))
                 {
-                    var pt = _dbContext.PostTagEntities.Where(x => x.TagId == item.Id && x.PostId == model.Id)
-                                                      .Select(x => x)
-                                                      .First();
+                    var pt = _dbContext.PostTagEntities.First(x => x.TagId == item.Id && x.PostId == model.Id);
                     pt.IsDeleted = true;
                     pt.UpdatedBy = account;
                     pt.UpdatedDate = DateTime.Now;
@@ -227,8 +214,8 @@ namespace AppManager.Areas.Admin.Controllers
             // thêm tag còn lại vào trong bài
             foreach (var tag in tags)
             {
-                var id = _dbContext.TagEntities.Where(x => x.Name == tag).Select(x => x.Id).First();
-                var pt = _dbContext.PostTagEntities.Where(x => x.TagId == id && x.PostId == model.Id && x.IsDeleted == false).Select(x => x);
+                var id = _dbContext.TagEntities.First(x => x.Name == tag).Id;
+                var pt = _dbContext.PostTagEntities.Where(x => x.TagId == id && x.PostId == model.Id && x.IsDeleted == false);
                 if (!pt.Any())
                 {
                     var e = new PostTagEntity()
@@ -390,7 +377,8 @@ namespace AppManager.Areas.Admin.Controllers
                              AuthorRole = e.Role,
                              CategoryId = b.Id,
                              Category = b.Name,
-                             Avatar = g.FilePath
+                             Avatar = g.FilePath,
+                             Account = e.Account,
                          }).First();
             var tags = (from x in _dbContext.PostTagEntities
                         join y in _dbContext.TagEntities on x.TagId equals y.Id

@@ -100,13 +100,6 @@ namespace AppManager.Controllers
             return View(data);
         }
 
-        public class ShoppingGridModel
-        {
-            public List<ProductDiscountModel> Discount { get; set; }
-            public int Count { get; set; }
-            public List<ProductModel> ListProduct { get; set; }
-        }
-
         [HttpGet]
         public IActionResult GetAllCategories()
         {

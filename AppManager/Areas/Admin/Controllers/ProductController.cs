@@ -79,20 +79,7 @@ namespace AppManager.Controllers
 
             if (id > 0)
             {
-                var product = _dbContext.ProductEntities.Where(x => x.Id == id)
-                                                        .Select(x => new ProductModel()
-                                                        {
-                                                            Id = x.Id,
-                                                            Name = x.Name,
-                                                            Price = x.Price,
-                                                            OldPrice = x.Price,
-                                                            Description = x.Description,
-                                                            Summary = x.Summary,
-                                                            Quantity = x.Quantity,
-                                                            Weight = x.Weight,
-                                                            Unit = x.Unit,
-                                                            CategoryId = x.CategoryId
-                                                        }).First();
+                var product = _dbContext.ProductEntities.First(x => x.Id == id);
                 var avatar = (from x in _dbContext.ProductImageEntities
                              join y in _dbContext.FileManageEntities on x.FileId equals y.Id
                              where x.ProductId == product.Id && x.IsAvatar == true
@@ -157,21 +144,7 @@ namespace AppManager.Controllers
             }
             else
             {
-                var entity = _dbContext.ProductEntities.Where(x => x.Id == productModel.Id)
-                                                        .Select(x => new ProductEntity()
-                                                        {
-                                                            Id = x.Id,
-                                                            Name = x.Name,
-                                                            Price = x.Price,
-                                                            OldPrice = x.Price,
-                                                            Description = x.Description,
-                                                            Summary = x.Summary,
-                                                            Quantity = x.Quantity,
-                                                            Weight = x.Weight,
-                                                            Unit = x.Unit,
-                                                            CategoryId = x.CategoryId,
-                                                            CreatedDate = x.CreatedDate
-                                                        }).First();
+                var entity = _dbContext.ProductEntities.First(x => x.Id == productModel.Id);
                 entity.Name = productModel.Name;
                 entity.Price = productModel.Price;
                 entity.OldPrice = productModel.OldPrice;
@@ -186,22 +159,13 @@ namespace AppManager.Controllers
 
                 // tìm ava hiện tại
                 var query = _dbContext.ProductImageEntities.Where(x => x.ProductId == productModel.Id)
-                                                       .Where(x => x.IsAvatar == true)
-                                                       .Select(x => new ProductImageEntity
-                                                       {
-                                                           Id = x.Id,
-                                                           ProductId = x.ProductId,
-                                                           FileId = x.FileId,
-                                                           IsAvatar = x.IsAvatar,
-                                                           CreatedDate = x.CreatedDate,
-                                                           UpdatedDate = DateTime.Now
-                                                       });
+                                                       .FirstOrDefault(x => x.IsAvatar == true);
                 // nếu có ava thì set nó về ảnh thường
-                if (query.Any())
+                if (query != null)
                 {
-                    var image = query.First();
-                    image.IsAvatar = false;
-                    _dbContext.ProductImageEntities.Update(image);
+                    query.IsAvatar = false;
+                    query.UpdatedDate = DateTime.Now;
+                    _dbContext.ProductImageEntities.Update(query);
                 }
             }
 
@@ -312,22 +276,13 @@ namespace AppManager.Controllers
         {
             // tìm ava trước
             var query = _dbContext.ProductImageEntities.Where(x => x.ProductId == productImage.ProductId)
-                                                       .Where(x => x.IsAvatar == true)
-                                                       .Select(x => new ProductImageEntity
-                                                       {
-                                                           Id = x.Id,
-                                                           ProductId = x.ProductId,
-                                                           FileId = x.FileId,
-                                                           IsAvatar = x.IsAvatar,
-                                                           CreatedDate = x.CreatedDate,
-                                                           UpdatedDate = DateTime.Now
-                                                       });
+                                                       .FirstOrDefault(x => x.IsAvatar == true);
             // nếu có ava thì set nó về ảnh thường
-            if (query.Any())
+            if (query != null)
             {
-                var image = query.First();
-                image.IsAvatar = false;
-                _dbContext.ProductImageEntities.Update(image);
+                query.IsAvatar = false;
+                query.UpdatedDate = DateTime.Now;
+                _dbContext.ProductImageEntities.Update(query);
             }
             // set prdImgModel trả về là ava
             var prd = _dbContext.ProductImageEntities.Where(p => p.Id == productImage.Id).Select(x => new ProductImageEntity
@@ -372,16 +327,7 @@ namespace AppManager.Controllers
             }
             else
             {
-                var query = _dbContext.DiscountEntities.Where(x => x.Id == id)
-                                                        .Select(x => new DiscountEntity()
-                                                        {
-                                                            Id = x.Id,
-                                                            ProductId = x.ProductId,
-                                                            DiscountType = x.DiscountType,
-                                                            DiscountValue = x.DiscountValue,
-                                                            StartDate = x.StartDate,
-                                                            EndDate = x.EndDate,
-                                                        }).First();
+                var query = _dbContext.DiscountEntities.First(x => x.Id == id);
                 return View(query);
             }
         }
@@ -436,16 +382,7 @@ namespace AppManager.Controllers
         [HttpGet]
         public IActionResult ListDiscount(int productId)
         {
-            var query = _dbContext.DiscountEntities.Where(x => x.ProductId == productId)
-                                                    .Select(x => new DiscountModel()
-                                                    {
-                                                        Id = x.Id,
-                                                        ProductId = x.ProductId,
-                                                        DiscountType = x.DiscountType,
-                                                        DiscountValue = x.DiscountValue,
-                                                        StartDate = x.StartDate,
-                                                        EndDate = x.EndDate,
-                                                    });
+            var query = _dbContext.DiscountEntities.Where(x => x.ProductId == productId);
             return query.Any() ? Json(query.ToList()) : Json("");
         }
     }

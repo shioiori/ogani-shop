@@ -116,13 +116,7 @@ namespace AppManager.Controllers
         [HttpGet]
         public IActionResult GetCategoryBlog()
         {
-            var query = _dbContext.CategoryBlogEntities.Where(x => x.IsDeleted == false)
-                                                       .Select(x => new CategoryBlogModel()
-                                                       {
-                                                           Id = x.Id,
-                                                           Name = x.Name,
-                                                           PostQuantity = x.PostQuantity,
-                                                       });
+            var query = _dbContext.CategoryBlogEntities.Where(x => x.IsDeleted == false);
             return !query.Any() ? Json("") : Json(query.ToList());
         }
 
@@ -154,13 +148,7 @@ namespace AppManager.Controllers
         [HttpGet]
         public IActionResult GetAllTags()
         {
-            var query = _dbContext.TagEntities.Where(x => x.IsDeleted == false)
-                                            .Select(x => new TagModel()
-                                            {
-                                                Id = x.Id,
-                                                Slug = x.Slug,
-                                                Name = x.Name,
-                                            });
+            var query = _dbContext.TagEntities.Where(x => x.IsDeleted == false);
             return query.Any() ? Json(query.ToList()) : Json("");
         }
 

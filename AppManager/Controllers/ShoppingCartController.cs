@@ -57,7 +57,7 @@ namespace AppManager.Controllers
 
 
         [HttpGet]
-        public IActionResult AddItemToCart(int id, int quantity = -1)
+        public IActionResult AddItemToCart(int id, int quantity = 1)
         {
             // kiếm xem có đăng nhập chưa
             var account = HttpContext.Request.Cookies["account"];
@@ -69,29 +69,12 @@ namespace AppManager.Controllers
                 HttpContext.Response.Cookies.Append("account", account);
             }
             // tìm xem trong giỏ hàng có sản phẩm này không
-            var cart = _dbContext.ShoppingCartEntities.Where(x => x.ProductId == id && x.Customer == account && x.Status == 0)
-                                                      .Select(x => new ShoppingCartEntity()
-                                                        {
-                                                            Id = x.Id,
-                                                            ProductId = x.ProductId,
-                                                            Quantity = x.Quantity,
-                                                            CreatedDate = x.CreatedDate,
-                                                            UpdatedDate = x.UpdatedDate,
-                                                            Customer = account
-                                                        });
-            if (cart.Any())
+            var cart = _dbContext.ShoppingCartEntities.FirstOrDefault(x => x.ProductId == id && x.Customer == account && x.Status == 0);
+            if (cart != null)
             {
                 // nếu có thì update sl của sản phẩm này thêm 1
-                var item = cart.Select(x => new ShoppingCartEntity()
-                {
-                    Id = x.Id,
-                    ProductId = id,
-                    Quantity = quantity == -1 ? x.Quantity + 1 : quantity,
-                    CreatedDate = x.CreatedDate,
-                    UpdatedDate = DateTime.Now,
-                    Customer = x.Customer
-                }).First();
-                _dbContext.ShoppingCartEntities.Update(item);
+                cart.Quantity = cart.Quantity + quantity;
+                _dbContext.ShoppingCartEntities.Update(cart);
             }
             else
             {
@@ -99,7 +82,7 @@ namespace AppManager.Controllers
                 _dbContext.ShoppingCartEntities.Add(new ShoppingCartEntity()
                 {
                     ProductId = id,
-                    Quantity = quantity == -1 ? 1 : quantity,
+                    Quantity = quantity,
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
                     Customer = account

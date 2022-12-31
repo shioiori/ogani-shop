@@ -24,7 +24,7 @@ namespace AppManager.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult GetData([FromBody]RequestModel req)
         {
-            var query = _dbContext.CategoryEntities.Where(x => !x.IsDeleted);
+            var query = _dbContext.CategoryEntities.Where(x => !(bool)x.IsDeleted);
             if (!string.IsNullOrEmpty(req.FreeText))
             {
                 query = query.Where(x => x.Name.ToLower().Contains(req.FreeText));

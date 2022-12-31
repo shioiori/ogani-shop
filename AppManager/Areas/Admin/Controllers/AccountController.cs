@@ -82,24 +82,12 @@ namespace AppAccountManager.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult UserProfile(UserModel model)
         {
-            var account = _dbContext.AccountManagerEntities.Where(x => x.Account == model.Account)
-                                                            .Select(x => new AccountManagerEntity()
-                                                            {
-                                                                Account = x.Account,
-                                                                Password = x.Password,
-                                                                Role = x.Role,
-                                                                CreatedDate = x.CreatedDate,
-                                                                UpdatedDate = x.UpdatedDate,
-                                                            }).First();
+            var account = _dbContext.AccountManagerEntities.First(x => x.Account == model.Account);
             account.Role = model.Role;
             account.UpdatedDate = DateTime.Now;
             account.UpdatedBy = model.Account;
             _dbContext.AccountManagerEntities.Update(account);
-            var entity = _dbContext.UserEntities.Where(x => x.Account == model.Account)
-                                                .Select(x => new UserEntity()
-                                                {
-                                                    CreatedDate = x.CreatedDate,
-                                                }).First();
+            var entity = _dbContext.UserEntities.First(x => x.Account == model.Account);
             entity.Account = model.Account;
             entity.FirstName = model.FirstName;
             entity.LastName = model.LastName;
@@ -144,16 +132,10 @@ namespace AppAccountManager.Areas.Admin.Controllers
                 TempData["Error"] = error.FirstOrDefault();
                 return Redirect("/admin/account/login");
             }
-            var query = _dbContext.AccountManagerEntities.Where(a => a.Account == model.Account && a.Password == model.Password)
-                                                  .Select(a => new AccountManagerModel()
-                                                    {
-                                                        Account = a.Account,
-                                                        Password = a.Password,
-                                                        Role = a.Role
-                                                    }).ToList();
-            if (query.Any())
+            var query = _dbContext.AccountManagerEntities.Where(a => a.Account == model.Account && a.Password == model.Password).FirstOrDefault();
+            if (query != null)
             {
-                var account = query.FirstOrDefault();
+                var account = query;
                 var claims = new List<Claim>()
                 {
                     new Claim(ClaimTypes.NameIdentifier, account.Account)
@@ -194,8 +176,7 @@ namespace AppAccountManager.Areas.Admin.Controllers
                 TempData["Error"] = error.FirstOrDefault();
                 return Redirect("/admin/account/signup");
             }
-            var query = _dbContext.UserEntities.Where(x => x.Account == user.Account || x.Email == user.Email)
-                                               .Select(x => new UserEntity() { });
+            var query = _dbContext.UserEntities.Where(x => x.Account == user.Account || x.Email == user.Email);
             if (query.Any())
             {
                 TempData["Error"] = "Đã có tài khoản này!";

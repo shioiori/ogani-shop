@@ -38,7 +38,7 @@
                             @{
                                 foreach(var item in Model)
                                 {
-                                    <tr id="@item.Id">
+                                    <tr id="@item.Id" name="@item.Name">
                                         <td class="shoping__cart__item">
                                             <img src="@item.Avatar" width="100px" alt="">
                                             <h5>@item.Name</h5>
@@ -108,6 +108,7 @@
     <script>
 
         function UpdateQuantity(id, quantity){
+            console.log(quantity);
             $.ajax({
                 url: "/ShoppingCart/AddItemToCart?id=" + id + "&&quantity=" + quantity,
                 type: "GET",
@@ -121,10 +122,15 @@
             });
         }
 
+        var listItem = JSON.parse('@Html.Raw(Json.Serialize(Model))');
+        console.log(listItem);
+
         $('.dec').on('click', function(e){
             let qtt = parseInt($(this).closest('tr').find('.product-quantity').val());
             let id = $(this).closest('tr').attr('id');
-            UpdateQuantity(id, qtt - 1);
+            var item = listItem.find(x => x.id == id);
+            UpdateQuantity(id, (qtt - 1) - item.quantity);
+            item.quantity = qtt - 1;
             let price = $(this).closest('tr').find('.shoping__cart__price').html().replace(/\s/g,'').replace('$', '');
             prdprice = price * (qtt - 1);
             $(this).closest('tr').find('.shoping__cart__total').html('$' + parseFloat(prdprice).toFixed(2));
@@ -136,7 +142,9 @@
         $('.inc').on('click', function(e){
             let qtt = parseInt($(this).closest('tr').find('.product-quantity').val());
             let id = $(this).closest('tr').attr('id');
-            UpdateQuantity(id, qtt + 1);
+            var item = listItem.find(x => x.id == id);
+            UpdateQuantity(id, (qtt + 1) - item.quantity);
+            item.quantity = qtt + 1;
             let price = $(this).closest('tr').find('.shoping__cart__price').html().replace(/\s/g,'').replace('$', '');
             prdprice = price * (qtt + 1);
             $(this).closest('tr').find('.shoping__cart__total').html('$' + parseFloat(prdprice).toFixed(2));

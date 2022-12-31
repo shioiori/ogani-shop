@@ -73,7 +73,7 @@
                                 <img class="img-circle img-bordered-sm" src="@item.Avatar" alt="user image">
                                     <span class="username">
                                         @{
-                                            if (item.Account == account) 
+                                            if (item.Account == account || item.Account == "admin") 
                                             {
                                                 <span class="mailbox-read-time pull-right">
                                                     <a href="/Admin/Blog/AddOrUpdate?id=@item.Id" class="link-primary">

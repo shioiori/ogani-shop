@@ -92,7 +92,7 @@ namespace AppManager.Areas.Admin.Controllers
             var entity = _dbContext.ShopOrderEntities.Find(id);
             entity.IsDeleted = true;
             _dbContext.ShopOrderEntities.Update(entity);
-            var detail = _dbContext.OrderDetailEntities.Where(x => x.ShopOrderId == id).Select(x => x).ToList();
+            var detail = _dbContext.OrderDetailEntities.Where(x => x.ShopOrderId == id).ToList();
             foreach (var item in detail)
             {
                 item.IsDeleted = true;
